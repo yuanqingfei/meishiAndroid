@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">美食快车</string>
+    <string name="hello">Hello meishi-android-release!</string>
+    <string name="action_settings">设置</string>
+    <string name="hello_world">美食快车， 你好</string>
+
+</resources>
