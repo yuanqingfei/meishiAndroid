@@ -4,4 +4,6 @@
     <string name="order_tab_name">我的订单</string>
 
     <string name="title_activity_search_results">搜索结果</string>
+    <string name="meishi_search_hint">美食名字</string>
+
 </resources>

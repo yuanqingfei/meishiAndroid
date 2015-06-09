@@ -1,8 +1,6 @@
 package com.meishi;
 
-import android.app.SearchManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -43,17 +41,16 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Add search view
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        // Add search view
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
         return true;
     }
 
@@ -70,9 +67,6 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
                 return true;
             case R.id.logout:
                 logout();
-                return true;
-            case R.id.search:
-                onSearchRequested();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

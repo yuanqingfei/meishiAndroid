@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 /**
  * Created by Aaron on 2015/6/8.
@@ -34,7 +35,10 @@ public class SearchResultsActivity extends Activity {
     }
 
     private void showResults(String query) {
-        // Query your data set and show results
+
+        Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+
+        // TODO: Query your data set and show results
         // ...
     }
 }

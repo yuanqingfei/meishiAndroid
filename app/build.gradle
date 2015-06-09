@@ -11,6 +11,21 @@ android {
         versionCode 2
         versionName "1.0.0"
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/spring.handlers'
+        exclude 'META-INF/spring.schemas'
+        exclude 'META-INF/spring.tooling'
+        exclude 'META-INF/ASL2.0'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -22,7 +37,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    compile ('com.meishi:model:1.0.0-SNAPSHOT') {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.google.android.gms:play-services:7.5.0'
+//    compile 'com.google.android.gms:play-services:7.5.0'
 }
