@@ -8,8 +8,8 @@ android {
         applicationId "com.meishi"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -24,8 +24,5 @@ dependencies {
 
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
-//    compile 'com.baidu.map:baidu-map:3.4.0'
-//    compile 'com.baidu.map:baidu-lib-map:3.4.0:armeabi@so'
-//    compile 'com.baidu.map:baidu-lib-loc:3.4.0:armeabi@so'
-
+    compile 'com.google.android.gms:play-services:7.5.0'
 }

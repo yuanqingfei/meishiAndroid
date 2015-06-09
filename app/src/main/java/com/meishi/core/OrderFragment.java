@@ -1,4 +1,4 @@
-package com.meishi.fragment;
+package com.meishi.core;
 
 
 import android.support.v4.app.Fragment;

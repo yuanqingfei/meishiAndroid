@@ -1,12 +1,11 @@
-package com.meishi.mymeishi;
+package com.meishi.core;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.meishi.fragment.MapFragment;
-import com.meishi.fragment.OrderFragment;
+import com.meishi.mymeishi.R;
 
 /**
  * Created by Aaron on 2015/6/7.
@@ -27,18 +26,22 @@ public class MeishiFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
-            case 0: return MapFragment.newInstance(position);
-            case 1: return OrderFragment.newInstance(position);
+        switch (position) {
+            case 0:
+                return MapFragment.newInstance(position);
+            case 1:
+                return OrderFragment.newInstance(position);
         }
         throw new RuntimeException("no more than 2 fragments");
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0: return context.getString(R.string.map_tab_name);
-            case 1: return context.getString(R.string.order_tab_name);
+        switch (position) {
+            case 0:
+                return context.getString(R.string.map_tab_name);
+            case 1:
+                return context.getString(R.string.order_tab_name);
         }
         throw new RuntimeException("no more than 2 fragments");
     }

@@ -1,1 +1,0 @@
-meishi application android client.

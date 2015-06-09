@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logout_title">退出登录</string>
+    <string name="logout_content">你确定吗？</string>
+    <string name="logout_ok">确定</string>
+    <string name="logout_cancel">放弃</string>
+</resources>
