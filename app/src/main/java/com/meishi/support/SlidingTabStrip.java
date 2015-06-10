@@ -1,4 +1,4 @@
-package com.meishi.core;
+package com.meishi.support;
 
 /**
  * Created by Aaron on 2015/6/10.

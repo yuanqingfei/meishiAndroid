@@ -17,20 +17,21 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.meishi.core.MeishiFragmentAdapter;
-import com.meishi.core.SlidingTabLayout;
 import com.meishi.logon.LoginActivity;
 import com.meishi.logon.LogoutFragment;
+import com.meishi.support.SlidingTabLayout;
 
 
 /**
  * Created by Aaron on 2015/6/7.
  */
-public class MeishiActivity extends AppCompatActivity implements LogoutFragment.CustomAlertListener {
+public class MeishiActivity extends AppCompatActivity implements LogoutFragment.CustomAlertListener
+         {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_acitivity);
+        setContentView(R.layout.main_layout);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -64,7 +65,7 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.meishi_menu, menu);
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         SearchView searchViewAction = (SearchView) MenuItemCompat
                 .getActionView(searchMenuItem);
@@ -128,4 +129,6 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
     public void onCancelButton() {
         Toast.makeText(this, "Pressed Cancel!", Toast.LENGTH_SHORT).show();
     }
+
+
 }

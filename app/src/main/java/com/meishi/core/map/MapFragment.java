@@ -1,4 +1,4 @@
-package com.meishi.core;
+package com.meishi.core.map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

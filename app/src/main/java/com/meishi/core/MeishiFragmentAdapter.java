@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.meishi.R;
+import com.meishi.core.map.MapFragment;
+import com.meishi.core.order.OrderFragment;
 
 /**
  * Created by Aaron on 2015/6/7.
