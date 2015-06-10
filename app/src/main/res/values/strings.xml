@@ -5,5 +5,7 @@
 
     <string name="title_activity_search_results">搜索结果</string>
     <string name="meishi_search_hint">美食名字</string>
+    <string name="search_title">搜索</string>
+
 
 </resources>

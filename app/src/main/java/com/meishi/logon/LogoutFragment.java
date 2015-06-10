@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.meishi.mymeishi.R;
+import com.meishi.R;
 
 /**
  * Created by Aaron on 2015/6/8.

@@ -1,21 +1,25 @@
 package com.meishi;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.meishi.core.MeishiFragmentAdapter;
+import com.meishi.core.SlidingTabLayout;
 import com.meishi.logon.LoginActivity;
 import com.meishi.logon.LogoutFragment;
-import com.meishi.mymeishi.R;
 
 
 /**
@@ -34,23 +38,44 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
                 MeishiActivity.this));
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        SlidingTabLayout tabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+        tabLayout.setDistributeEvenly(true);
+        tabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.accent_material_dark);
+            }
+        });
+        tabLayout.setViewPager(viewPager);
 
         // Set a ToolBar to replace the ActionBar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Add search view
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+//        ActionBar actionBar = getActionBar();
+//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        actionBar.setDisplayShowHomeEnabled(true);
+//        actionBar.setCustomView(R.layout.action_bar_layout);
+
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchViewAction = (SearchView) MenuItemCompat
+                .getActionView(searchMenuItem);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo = searchManager
+                .getSearchableInfo(getComponentName());
+        searchViewAction.setSearchableInfo(searchableInfo);
+        searchViewAction.setIconifiedByDefault(false);
+
         return true;
     }
 
@@ -67,6 +92,11 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
                 return true;
             case R.id.logout:
                 logout();
+                return true;
+            case R.id.action_search:
+                // Handle action bar item clicks here. The action bar will
+                // automatically handle clicks on the Home/Up button, so long
+                // as you specify a parent activity in AndroidManifest.xml.
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

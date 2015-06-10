@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.meishi.mymeishi.R;
+import com.meishi.R;
 
 import java.util.ArrayList;
 import java.util.List;

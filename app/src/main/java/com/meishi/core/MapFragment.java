@@ -2,11 +2,9 @@ package com.meishi.core;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -20,19 +18,23 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.offline.MKOLUpdateElement;
+import com.baidu.mapapi.map.offline.MKOfflineMap;
+import com.baidu.mapapi.map.offline.MKOfflineMapListener;
 import com.baidu.mapapi.model.LatLng;
-import com.meishi.mymeishi.R;
 
 /**
  * Created by Aaron on 2015/6/7.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements MKOfflineMapListener {
 
     private MapView mMapView;
 
     private BaiduMap mBaiduMap;
 
     private LocationClient mLocClient;
+
+    private MKOfflineMap mOffline = null;
 
     public static MapFragment newInstance(int page) {
         MapFragment fragment = new MapFragment();
@@ -41,35 +43,45 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        mOffline = new MKOfflineMap();
+        mOffline.init(this);
+
+        importFromSDCard();
+    }
+
+    /**
+     * 从SD卡导入离线地图安装包
+     *
+     */
+    public void importFromSDCard() {
+        int num = mOffline.importOfflineData();
+        String msg = "";
+        if (num == 0) {
+            msg = "没有导入离线包，这可能是离线包放置位置不正确，或离线包已经导入过";
+        } else {
+            msg = String.format("成功导入 %d 个离线包，可以在下载管理查看", num);
+        }
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.search_and_map, container, false);
-        SearchView search = new SearchView(getActivity());
-        search.setQueryHint(getString(R.string.meishi_search_hint));
-        search.setIconified(true);
-
-        RelativeLayout searchLayout = (RelativeLayout)view.findViewById(R.id.search);
-        searchLayout.addView(search);
-
-
         MapStatus ms = new MapStatus.Builder()
 //                .overlook(0).zoom(5)
                 .build();
         BaiduMapOptions options = new
                 BaiduMapOptions().mapStatus(ms).compassEnabled(true).zoomControlsEnabled(false);
         mMapView = new MapView(getActivity(), options);
-        RelativeLayout mapLayout = (RelativeLayout)view.findViewById(R.id.map);
-        mapLayout.addView(mMapView);
 
         mBaiduMap = mMapView.getMap();
         mBaiduMap.setOnMapStatusChangeListener(new MyOnMapStatusChangeListener());
         setupLocaion();
 
-        return view;
+        return mMapView;
     }
 
 
@@ -119,11 +131,37 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        mOffline.destroy();
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mLocClient.stop();
         mLocClient = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onGetOfflineMapState(int type, int state) {
+        switch (type) {
+            case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
+                MKOLUpdateElement update = mOffline.getUpdateInfo(state);
+                // 处理下载进度更新提示
+                if (update != null) {
+                    Toast.makeText(getActivity(), String.format("%s : %d%%", update.cityName,
+                            update.ratio), Toast.LENGTH_SHORT);
+                }
+            }
+            break;
+            case MKOfflineMap.TYPE_NEW_OFFLINE:
+                // 有新离线地图安装
+                Toast.makeText(getActivity(), String.format("add offlinemap num:%d", state), Toast.LENGTH_SHORT);
+                break;
+            case MKOfflineMap.TYPE_VER_UPDATE:
+                // 版本更新提示
+                // MKOLUpdateElement e = mOffline.getUpdateInfo(state);
+
+                break;
+        }
+
     }
 
 
@@ -136,7 +174,7 @@ public class MapFragment extends Fragment {
         @Override
         public void onMapStatusChangeFinish(MapStatus status) {
             LatLng newCenter = status.target;
-            Toast.makeText(mMapView.getContext(), "location: " + newCenter.latitude + " " + newCenter.longitude, Toast.LENGTH_LONG).show();
+//            Toast.makeText(mMapView.getContext(), "location: " + newCenter.latitude + " " + newCenter.longitude, Toast.LENGTH_LONG).show();
             // TODO: I will take this as nearBy search with BaiduAPI then manually add
             // overlay
         }

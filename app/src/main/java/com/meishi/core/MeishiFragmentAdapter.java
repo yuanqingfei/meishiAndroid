@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.meishi.mymeishi.R;
+import com.meishi.R;
 
 /**
  * Created by Aaron on 2015/6/7.

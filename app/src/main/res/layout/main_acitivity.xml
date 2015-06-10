@@ -9,8 +9,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"/>
+        android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
+         />
 
     <com.meishi.core.MeishiViewPager
         android:id="@+id/viewpager"
@@ -19,16 +20,14 @@
         android:layout_weight="1"
         android:background="@android:color/white" />
 
-
-    <android.support.design.widget.TabLayout
+    <com.meishi.core.SlidingTabLayout
         android:id="@+id/sliding_tabs"
-        style="@style/Base.Widget.Design.TabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="fixed"
-        />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
-    <!-- scrollable-->
+    <!--
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/MyThemeOverlay.ActionBar"
 
-
+    android:background="?attr/colorPrimary"-->
 </LinearLayout>
