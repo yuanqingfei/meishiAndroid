@@ -19,14 +19,15 @@ import android.widget.Toast;
 import com.meishi.core.MeishiFragmentAdapter;
 import com.meishi.logon.LoginActivity;
 import com.meishi.logon.LogoutFragment;
+import com.meishi.register.RegisterActivity;
 import com.meishi.support.SlidingTabLayout;
 
 
 /**
  * Created by Aaron on 2015/6/7.
  */
-public class MeishiActivity extends AppCompatActivity implements LogoutFragment.CustomAlertListener
-         {
+public class MeishiActivity extends AppCompatActivity implements LogoutFragment.CustomAlertListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,8 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
 //        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        actionBar.setDisplayShowHomeEnabled(true);
 //        actionBar.setCustomView(R.layout.action_bar_layout);
-
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,9 +95,6 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
                 logout();
                 return true;
             case R.id.action_search:
-                // Handle action bar item clicks here. The action bar will
-                // automatically handle clicks on the Home/Up button, so long
-                // as you specify a parent activity in AndroidManifest.xml.
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -117,8 +114,11 @@ public class MeishiActivity extends AppCompatActivity implements LogoutFragment.
     }
 
     private void registerUser() {
-        Toast.makeText(this, "register", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(MeishiActivity.this, RegisterActivity.class));
+        startActivity(intent);
     }
+
 
     @Override
     public void onOKButton() {

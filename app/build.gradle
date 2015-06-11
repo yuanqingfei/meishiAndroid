@@ -42,10 +42,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile ('com.meishi:model:1.0.0-SNAPSHOT') {
+    compile ('com.meishi:meishi-model:1.0.0-SNAPSHOT') {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
+
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M2'
 //    compile 'com.google.android.gms:play-services:7.5.0'
 }

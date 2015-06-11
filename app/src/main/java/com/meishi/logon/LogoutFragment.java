@@ -14,6 +14,7 @@ import com.meishi.R;
 public class LogoutFragment extends DialogFragment {
     public interface CustomAlertListener {
         void onOKButton();
+
         void onCancelButton();
     }
 

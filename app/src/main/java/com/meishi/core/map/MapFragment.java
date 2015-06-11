@@ -36,6 +36,7 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
 
     private MKOfflineMap mOffline = null;
 
+
     public static MapFragment newInstance(int page) {
         MapFragment fragment = new MapFragment();
         return fragment;
@@ -43,29 +44,29 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
+        // make use of baidu offline map first.
         mOffline = new MKOfflineMap();
         mOffline.init(this);
-
         importFromSDCard();
     }
 
     /**
-     * 从SD卡导入离线地图安装包
-     *
+     * 把vmp文件夹拷入SD卡根目录下的BaiduMapSDK文件夹内, 对于我来说，是H盘而不是I盘
      */
     public void importFromSDCard() {
         int num = mOffline.importOfflineData();
         String msg = "";
         if (num == 0) {
-            msg = "没有导入离线包，这可能是离线包放置位置不正确，或离线包已经导入过";
+            return;
+//            msg = "没有导入离线包，这可能是离线包放置位置不正确，或离线包已经导入过";
         } else {
             msg = String.format("成功导入 %d 个离线包，可以在下载管理查看", num);
         }
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +85,29 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
         return mMapView;
     }
 
+    @Override
+    public void onGetOfflineMapState(int type, int state) {
+        switch (type) {
+            case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
+                MKOLUpdateElement update = mOffline.getUpdateInfo(state);
+                // 处理下载进度更新提示
+                if (update != null) {
+                    Toast.makeText(getActivity(), String.format("%s : %d%%", update.cityName,
+                            update.ratio), Toast.LENGTH_SHORT);
+                }
+            }
+            break;
+            case MKOfflineMap.TYPE_NEW_OFFLINE:
+                // 有新离线地图安装
+                Toast.makeText(getActivity(), String.format("add offlinemap num:%d", state), Toast.LENGTH_SHORT);
+                break;
+            case MKOfflineMap.TYPE_VER_UPDATE:
+                // 版本更新提示
+                // MKOLUpdateElement e = mOffline.getUpdateInfo(state);
+                break;
+        }
+
+    }
 
     private void setupLocaion() {
         mBaiduMap.setMyLocationEnabled(true);
@@ -137,31 +161,6 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
         mLocClient.stop();
         mLocClient = null;
         super.onDestroy();
-    }
-
-    @Override
-    public void onGetOfflineMapState(int type, int state) {
-        switch (type) {
-            case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-                MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-                // 处理下载进度更新提示
-                if (update != null) {
-                    Toast.makeText(getActivity(), String.format("%s : %d%%", update.cityName,
-                            update.ratio), Toast.LENGTH_SHORT);
-                }
-            }
-            break;
-            case MKOfflineMap.TYPE_NEW_OFFLINE:
-                // 有新离线地图安装
-                Toast.makeText(getActivity(), String.format("add offlinemap num:%d", state), Toast.LENGTH_SHORT);
-                break;
-            case MKOfflineMap.TYPE_VER_UPDATE:
-                // 版本更新提示
-                // MKOLUpdateElement e = mOffline.getUpdateInfo(state);
-
-                break;
-        }
-
     }
 
 
