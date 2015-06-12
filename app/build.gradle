@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.meishi"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 22
         versionCode 2
         versionName "1.0.0"
@@ -44,10 +44,11 @@ dependencies {
 
     compile ('com.meishi:meishi-model:1.0.0-SNAPSHOT') {
         exclude group: 'commons-logging', module: 'commons-logging'
+        exclude module: 'spring-beans'
+        exclude module: 'spring-core'
     }
+
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
-
     compile 'org.springframework.android:spring-android-rest-template:2.0.0.M2'
-//    compile 'com.google.android.gms:play-services:7.5.0'
 }

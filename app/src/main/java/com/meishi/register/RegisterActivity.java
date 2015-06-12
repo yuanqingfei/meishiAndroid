@@ -2,7 +2,6 @@ package com.meishi.register;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +17,13 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.meishi.R;
 import com.meishi.model.Customer;
+import com.meishi.rest.PostTask;
 
 public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
     private static final String TAG = RegisterActivity.class.getName();
+
+    private String CITY = "上海";
 
     private GeoCoder mSearch = null;
 
@@ -35,6 +37,9 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
 
     private Customer customer;
 
+    private PostTask postTask;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,29 +50,25 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
         mSearch.setOnGetGeoCodeResultListener(this);
 
 
-        email = (EditText)findViewById(R.id.emailValue);
-        password = (EditText)findViewById(R.id.passwordValue);
-        name = (EditText)findViewById(R.id.nameValue);
-        idNumber = (EditText)findViewById(R.id.personalIdValue);
-        cellPhone = (EditText)findViewById(R.id.cellPhoneValue);
-        address = (EditText)findViewById(R.id.addressValue);
+        email = (EditText) findViewById(R.id.emailValue);
+        password = (EditText) findViewById(R.id.passwordValue);
+        name = (EditText) findViewById(R.id.nameValue);
+        idNumber = (EditText) findViewById(R.id.personalIdValue);
+        cellPhone = (EditText) findViewById(R.id.cellPhoneValue);
+        address = (EditText) findViewById(R.id.addressValue);
 
-        submitButton = (Button)findViewById(R.id.submit);
+        submitButton = (Button) findViewById(R.id.submit);
         submitButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "into callback");
                 customer = new Customer();
                 customer.setIdentity(email.getText().toString());
                 customer.setPassword(password.getText().toString());
                 customer.setName(name.getText().toString());
                 customer.setTelephoneNumber(cellPhone.getText().toString());
-                customer.setAddress(address.getText().toString());
-                mSearch.geocode(new GeoCodeOption().city("上海").address("老沪闵路1296弄39号101室"));
-
-                Log.i(TAG, "start revert");
-//                mSearch.geocode(new GeoCodeOption().city("上海").address("老沪闵路1296弄"));
-                Log.i(TAG, "end revert");
+                String addressValue = address.getText().toString();
+                customer.setAddress(addressValue);
+                mSearch.geocode(new GeoCodeOption().city(CITY).address(addressValue));
             }
         });
     }
@@ -81,12 +82,9 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -94,18 +92,14 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
     @Override
     public void onGetGeoCodeResult(GeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(this, "抱歉，未能找到结果", Toast.LENGTH_LONG)
+            Toast.makeText(this, "抱歉，您提供的地址无法定位，请输入更具体地址。", Toast.LENGTH_LONG)
                     .show();
             return;
         }
-        String strInfo = String.format("纬度：%f 经度：%f",
-                result.getLocation().latitude, result.getLocation().longitude);
-        Toast.makeText(this, strInfo, Toast.LENGTH_LONG).show();
-
         customer.setLocation(new double[]{result.getLocation().longitude, result.getLocation().latitude});
 
-        Log.i(TAG, "longitude: " + new Double(customer.getLocation()[0]).toString());
-        Log.i(TAG, "latitude: " + new Double(customer.getLocation()[1]).toString());
+        postTask = new PostTask(this);
+        postTask.execute(new Customer[]{customer});
     }
 
     @Override
@@ -124,4 +118,6 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
         mSearch.destroy();
         super.onDestroy();
     }
+
+
 }

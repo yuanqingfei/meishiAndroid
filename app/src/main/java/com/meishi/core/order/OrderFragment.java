@@ -1,10 +1,8 @@
 package com.meishi.core.order;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,9 @@ import android.widget.Toast;
 
 import com.meishi.R;
 import com.meishi.model.Order;
+import com.meishi.rest.GetTask;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +28,9 @@ public class OrderFragment extends ListFragment {
     private ListView list;
     private OrderListAdapter adapter;
 
-    List<Order> orders = new ArrayList<Order>();
+    private GetTask getTask;
+
+    private List<Order> orders = new ArrayList<Order>();
 
     public static OrderFragment newInstance(int page) {
         return new OrderFragment();
@@ -49,7 +49,6 @@ public class OrderFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d(TAG, "onListItemClick");
         Toast.makeText(v.getContext(), adapter.getItem(position).getId(), Toast.LENGTH_SHORT);
 
     }
@@ -57,31 +56,15 @@ public class OrderFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        View header = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.order_header_layout, null);
-//        getListView().addHeaderView(header);
-
-        for (int i = 1; i < 35; i++) {
-            Order order = new Order();
-            order.setId(new Integer(i).toString());
-            order.setOrderTime(new Date());
-            order.setTotalPrice(23.5);
-            orders.add(order);
-        }
-
         adapter = new OrderListAdapter(getActivity(), R.layout.order_row_layout, orders);
+
+        getTask = new GetTask(this.getActivity(), adapter);
+        getTask.execute();
+
         setListAdapter(adapter);
 
-
-        Log.i(TAG, "--------onActivityCreated");
-
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        Log.i(TAG, "----------onAttach");
-    }
 
     @Override
     public void onResume() {
@@ -102,7 +85,6 @@ public class OrderFragment extends ListFragment {
             t.printStackTrace();
         }
     }
-
 
 
 }
