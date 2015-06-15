@@ -21,6 +21,8 @@ public class MeishiFragmentAdapter extends FragmentPagerAdapter {
         this.context = context;
     }
 
+
+
     @Override
     public int getCount() {
         return PAGE_COUNT;
@@ -30,7 +32,8 @@ public class MeishiFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MapFragment.newInstance(position);
+                MapFragment map = MapFragment.newInstance(position);
+                return map;
             case 1:
                 return OrderFragment.newInstance(position);
         }

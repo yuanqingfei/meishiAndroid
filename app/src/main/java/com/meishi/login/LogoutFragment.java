@@ -1,4 +1,4 @@
-package com.meishi.logon;
+package com.meishi.login;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,19 +6,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+import com.meishi.MeishiApplication;
 import com.meishi.R;
 
 /**
  * Created by Aaron on 2015/6/8.
  */
 public class LogoutFragment extends DialogFragment {
-    public interface CustomAlertListener {
-        void onOKButton();
-
-        void onCancelButton();
-    }
-
-    private CustomAlertListener listener;
 
     public LogoutFragment() {
         // Empty constructor required for DialogFragment
@@ -38,18 +32,18 @@ public class LogoutFragment extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setMessage(getString(R.string.logout_content));
-        listener = (CustomAlertListener) getActivity();
         alertDialogBuilder.setPositiveButton(getString(R.string.logout_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.onOKButton();
                 dialog.dismiss();
+
+                // reset current client id to null;
+                ((MeishiApplication) getActivity().getApplication()).setCustomerId(null);
             }
         });
         alertDialogBuilder.setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.onCancelButton();
                 dialog.dismiss();
             }
         });

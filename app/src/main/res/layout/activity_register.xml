@@ -7,38 +7,16 @@
     tools:context="com.meishi.register.RegisterActivity"
     android:id="@+id/phoneNumberValue">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="电子邮箱"
-        android:id="@+id/email"
-        android:hint="登录用电子邮箱"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/passwordValue"
-        android:layout_alignParentTop="true" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/emailValue"
+        android:id="@+id/identityValue"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:inputType="textEmailAddress"
-        android:layout_toEndOf="@+id/email"
-        android:layout_toRightOf="@+id/email" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="登录密码"
-        android:id="@+id/password"
-        android:layout_alignBottom="@+id/passwordValue"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:hint="输入手机号或电子邮箱" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -46,63 +24,21 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/passwordValue"
-        android:layout_below="@+id/emailValue"
-        android:layout_alignRight="@+id/emailValue"
-        android:layout_alignEnd="@+id/emailValue"
-        android:layout_alignLeft="@+id/emailValue"
-        android:layout_alignStart="@+id/emailValue" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="姓名"
-        android:id="@+id/name"
-        android:layout_marginTop="38dp"
-        android:layout_below="@+id/password"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="身份证号码"
-        android:id="@+id/personalId"
-        android:layout_marginTop="41dp"
-        android:layout_below="@+id/name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="手机号码"
-        android:id="@+id/phoneNumber"
-        android:layout_alignBottom="@+id/cellPhoneValue"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/identityValue"
+        android:layout_alignRight="@+id/identityValue"
+        android:layout_alignEnd="@+id/identityValue"
+        android:layout_alignLeft="@+id/identityValue"
+        android:layout_alignStart="@+id/identityValue"
+        android:hint="密码（6-20数字及字母组成" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="创建账户"
+        android:text="注册"
         android:id="@+id/submit"
         android:layout_marginBottom="51dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="家庭住址"
-        android:id="@+id/address"
-        android:layout_below="@+id/phoneNumber"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="60dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -110,30 +46,45 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/nameValue"
-        android:layout_above="@+id/personalId"
-        android:layout_alignLeft="@+id/passwordValue"
-        android:layout_alignStart="@+id/passwordValue" />
+        android:layout_below="@+id/passwordValue2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:hint="请填写身份证中的姓名" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/personalIdValue"
-        android:layout_alignBottom="@+id/personalId"
-        android:layout_alignLeft="@+id/nameValue"
-        android:layout_alignStart="@+id/nameValue"
-        android:layout_alignRight="@+id/nameValue"
-        android:layout_alignEnd="@+id/nameValue"
-        android:inputType="text" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
+        android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/cellPhoneValue"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/personalIdValue"
-        android:layout_alignStart="@+id/personalIdValue" />
+        android:id="@+id/passwordValue2"
+        android:layout_below="@+id/passwordValue"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/passwordValue"
+        android:hint="确认密码" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="男"
+        android:id="@+id/maleButton"
+        android:layout_toStartOf="@+id/submit"
+        android:layout_below="@+id/nameValue" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="女"
+        android:id="@+id/femaleButton"
+        android:layout_below="@+id/nameValue"
+        android:layout_alignEnd="@+id/submit" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="性别"
+        android:id="@+id/genderView"
+        android:layout_alignBottom="@+id/maleButton" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -141,8 +92,9 @@
         android:inputType="textPostalAddress"
         android:ems="10"
         android:id="@+id/addressValue"
-        android:layout_alignBottom="@+id/address"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/maleButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/nameValue"
+        android:hint="住址" />
 
 </RelativeLayout>

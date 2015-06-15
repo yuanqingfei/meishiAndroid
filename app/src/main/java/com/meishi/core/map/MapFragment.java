@@ -75,7 +75,7 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
 //                .overlook(0).zoom(5)
                 .build();
         BaiduMapOptions options = new
-                BaiduMapOptions().mapStatus(ms).compassEnabled(true).zoomControlsEnabled(false);
+                BaiduMapOptions().mapStatus(ms).compassEnabled(true).zoomControlsEnabled(false).scaleControlEnabled(false);
         mMapView = new MapView(getActivity(), options);
 
         mBaiduMap = mMapView.getMap();

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.meishi.core.order.OrderListAdapter;
 import com.meishi.model.Order;
+import com.meishi.support.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,22 +29,23 @@ import java.util.List;
 /**
  * Created by Aaron on 2015/6/12.
  */
-public class GetTask extends AsyncTask<Void, Void, List<Order>> {
+public class GetOrderTask extends AsyncTask<Void, Void, List<Order>> {
 
-    private String TAG = GetTask.class.getSimpleName();
+    private String TAG = GetOrderTask.class.getSimpleName();
 
     private Activity activity;
 
     private SimpleAsync async;
 
-    private List<Order> orderList = new ArrayList<>();
-
     private OrderListAdapter listAdapter;
 
-    public GetTask(Activity activity, OrderListAdapter listAdapter) {
+    private String customerId;
+
+    public GetOrderTask(Activity activity, OrderListAdapter listAdapter, String customerId) {
         this.activity = activity;
-        async = new SimpleAsync(activity);
+        this.async = new SimpleAsync(activity);
         this.listAdapter = listAdapter;
+        this.customerId = customerId;
     }
 
     @Override
@@ -53,27 +55,18 @@ public class GetTask extends AsyncTask<Void, Void, List<Order>> {
 
     @Override
     protected List<Order> doInBackground(Void... params) {
+        List<Order> orderList = new ArrayList<>();
         try {
-            HttpHeaders requestHeaders = new HttpHeaders();
-            HttpAuthentication authHeader = new HttpBasicAuthentication(SimpleAsync.REST_USER, SimpleAsync.REST_PASSWORD);
-            requestHeaders.setAuthorization(authHeader);
-            requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-//        requestHeaders.setAccept(Collections.singletonList(new MediaType("application", "json", StandardCharsets.UTF_8)));
+            RestTemplate restTemplate = createRestTemplate();
 
-            HttpEntity<Order> requestEntity = new HttpEntity<Order>(null, requestHeaders);
-
-            // Create a new RestTemplate instance
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-            // Make the network request, posting the message, expecting a String in response from the server
-            ResponseEntity<String> response = restTemplate.exchange(SimpleAsync.GET_URL, HttpMethod.GET, requestEntity,
+            HttpEntity<Object> requestEntity = createGetRequest();
+            ResponseEntity<String> response = restTemplate.exchange(Constants.FIND_ORDER_URL + customerId, HttpMethod.GET, requestEntity,
                     String.class);
 
             Log.i(TAG, response.getStatusCode().toString());
 
             String result = response.getBody();
+
             JSONObject resultJson = null;
             try {
                 resultJson = new JSONObject(result);
@@ -98,17 +91,33 @@ public class GetTask extends AsyncTask<Void, Void, List<Order>> {
                 e.printStackTrace();
             }
 
-            return orderList;
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
-        return null;
+        return orderList;
+    }
+
+    private RestTemplate createRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        return restTemplate;
+    }
+
+    private HttpEntity<Object> createGetRequest() {
+        HttpHeaders requestHeaders = new HttpHeaders();
+        HttpAuthentication authHeader = new HttpBasicAuthentication(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD);
+        requestHeaders.setAuthorization(authHeader);
+        requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        return new HttpEntity<Object>(requestHeaders);
     }
 
     @Override
     protected void onPostExecute(List<Order> orderList) {
         async.dismissProgressDialog();
-        listAdapter.addAll(orderList);
+        for(Order order : orderList){
+           listAdapter.add(order);
+        }
         listAdapter.notifyDataSetChanged();
     }
 

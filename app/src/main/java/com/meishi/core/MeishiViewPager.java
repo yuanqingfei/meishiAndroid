@@ -18,6 +18,7 @@ public class MeishiViewPager extends ViewPager {
         super(context, attrs);
     }
 
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
@@ -28,5 +29,10 @@ public class MeishiViewPager extends ViewPager {
     public boolean onTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
         return false;
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        super.setCurrentItem(item);
     }
 }

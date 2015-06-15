@@ -7,14 +7,16 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
-    <item
+<!--    <item
         android:id="@+id/register"
-        android:title="注册"
-        app:showAsAction="collapseActionView|ifRoom"></item>
+        android:title=""
+        app:showAsAction="collapseActionView|ifRoom"></item>-->
+
     <item
         android:id="@+id/login"
-        android:title="登录"
+        android:title="登录/注册"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/logout"
         android:title="登出"

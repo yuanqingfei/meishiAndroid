@@ -1,6 +1,7 @@
 package com.meishi.register;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,27 +18,32 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.meishi.R;
 import com.meishi.model.Customer;
-import com.meishi.rest.PostTask;
+import com.meishi.rest.PostCustomerTask;
+import com.meishi.support.Constants;
 
 public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
     private static final String TAG = RegisterActivity.class.getName();
 
-    private String CITY = "上海";
-
     private GeoCoder mSearch = null;
 
     private Button submitButton;
-    private EditText email;
+    private EditText identity;
     private EditText password;
+    private EditText password2;
     private EditText name;
-    private EditText idNumber;
-    private EditText cellPhone;
     private EditText address;
 
     private Customer customer;
 
-    private PostTask postTask;
+    private PostCustomerTask postTask;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+    }
 
 
     @Override
@@ -50,11 +56,10 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
         mSearch.setOnGetGeoCodeResultListener(this);
 
 
-        email = (EditText) findViewById(R.id.emailValue);
+        identity = (EditText) findViewById(R.id.identityValue);
         password = (EditText) findViewById(R.id.passwordValue);
+        password2 = (EditText) findViewById(R.id.passwordValue2);
         name = (EditText) findViewById(R.id.nameValue);
-        idNumber = (EditText) findViewById(R.id.personalIdValue);
-        cellPhone = (EditText) findViewById(R.id.cellPhoneValue);
         address = (EditText) findViewById(R.id.addressValue);
 
         submitButton = (Button) findViewById(R.id.submit);
@@ -62,13 +67,13 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
             @Override
             public void onClick(View v) {
                 customer = new Customer();
-                customer.setIdentity(email.getText().toString());
+                customer.setIdentity(identity.getText().toString());
                 customer.setPassword(password.getText().toString());
                 customer.setName(name.getText().toString());
-                customer.setTelephoneNumber(cellPhone.getText().toString());
+                customer.setTelephoneNumber(identity.getText().toString());
                 String addressValue = address.getText().toString();
                 customer.setAddress(addressValue);
-                mSearch.geocode(new GeoCodeOption().city(CITY).address(addressValue));
+                mSearch.geocode(new GeoCodeOption().city(Constants.CITY).address(addressValue));
             }
         });
     }
@@ -98,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
         }
         customer.setLocation(new double[]{result.getLocation().longitude, result.getLocation().latitude});
 
-        postTask = new PostTask(this);
+        postTask = new PostCustomerTask(this, customer.getIdentity());
         postTask.execute(new Customer[]{customer});
     }
 
