@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp"
-        android:minHeight="?attr/actionBarSize"
-         />
-
-    <com.meishi.core.MeishiViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:layout_weight="1" />
 
-    <com.meishi.support.SlidingTabLayout
-        android:id="@+id/sliding_tabs"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:id="@+id/rg_tab"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:background="@drawable/bg_weibo_listab">
 
-    <!--
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/MyThemeOverlay.ActionBar"
+        <RadioButton
+            android:id="@+id/rb_map"
+            style="@style/weibo_tab"
+            android:drawableLeft="@drawable/weibolist_attention_selector"
+            android:text="美食" />
 
-    android:background="?attr/colorPrimary"-->
+
+        <RadioButton
+            android:id="@+id/rb_my"
+            style="@style/weibo_tab"
+            android:drawableLeft="@drawable/weibolist_mylist_selector"
+            android:text="我的" />
+
+    </RadioGroup>
 </LinearLayout>

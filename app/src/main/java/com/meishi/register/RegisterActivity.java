@@ -1,10 +1,10 @@
 package com.meishi.register;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +21,7 @@ import com.meishi.model.Customer;
 import com.meishi.rest.PostCustomerTask;
 import com.meishi.support.Constants;
 
-public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
+public class RegisterActivity extends Activity implements OnGetGeoCoderResultListener {
 
     private static final String TAG = RegisterActivity.class.getName();
 
@@ -38,10 +38,12 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
 
     private PostCustomerTask postTask;
 
+    private AlertDialog alertDialog;
+
     @Override
     protected void onStart() {
         super.onStart();
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
     }
 
@@ -76,21 +78,20 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
                 mSearch.geocode(new GeoCodeOption().city(Constants.CITY).address(addressValue));
             }
         });
+
+        // add attached alert diaglog
+        alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("账户创建");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_register, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public AlertDialog getAlertDialog() {
+        return alertDialog;
     }
 
 
@@ -122,6 +123,9 @@ public class RegisterActivity extends AppCompatActivity implements OnGetGeoCoder
     protected void onDestroy() {
         mSearch.destroy();
         super.onDestroy();
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+        }
     }
 
 

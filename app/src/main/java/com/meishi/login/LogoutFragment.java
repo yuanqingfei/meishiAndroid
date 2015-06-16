@@ -2,9 +2,9 @@ package com.meishi.login;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 
 import com.meishi.MeishiApplication;
 import com.meishi.R;
@@ -47,6 +47,7 @@ public class LogoutFragment extends DialogFragment {
                 dialog.dismiss();
             }
         });
-        return alertDialogBuilder.create();
+        AlertDialog dialog = alertDialogBuilder.create();
+        return dialog;
     }
 }

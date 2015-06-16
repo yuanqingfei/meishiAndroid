@@ -3,17 +3,14 @@ package com.meishi.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -38,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -45,7 +43,7 @@ import java.nio.charset.Charset;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -64,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
     }
 
@@ -227,11 +225,14 @@ public class LoginActivity extends AppCompatActivity {
             requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
             HttpEntity<Object> requestEntity = new HttpEntity<Object>(requestHeaders);
 
-            ResponseEntity<String> response = createRestTemplate().exchange(Constants.FIND_CUSTOMER_URL + identity, HttpMethod.GET, requestEntity,
-                    String.class);
-
-            Log.i(TAG, response.getStatusCode().toString());
-
+            ResponseEntity<String> response = null;
+            try{
+                response = createRestTemplate().exchange(Constants.FIND_CUSTOMER_URL + identity, HttpMethod.GET, requestEntity,
+                        String.class);
+            }catch(HttpClientErrorException e){
+                e.printStackTrace();
+                return false;
+            }
             return HttpStatus.OK.equals(response.getStatusCode());
         }
 
@@ -269,11 +270,5 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_login, menu);
-        return true;
-    }
 }
 

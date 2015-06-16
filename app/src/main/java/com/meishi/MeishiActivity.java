@@ -1,104 +1,84 @@
 package com.meishi;
 
-import android.app.SearchManager;
-import android.app.SearchableInfo;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.meishi.core.MeishiFragmentAdapter;
+import com.meishi.core.FragmentFactory;
 import com.meishi.login.LoginActivity;
 import com.meishi.login.LogoutFragment;
-import com.meishi.support.SlidingTabLayout;
 
 
 /**
  * Created by Aaron on 2015/6/7.
  */
-public class MeishiActivity extends AppCompatActivity {
+public class MeishiActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
+    private FragmentManager fragmentManager;
 
     private static final String TAG = MeishiActivity.class.getSimpleName();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_layout);
 
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MeishiFragmentAdapter(getSupportFragmentManager(),
-                MeishiActivity.this));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-//                OrderFragment fragment = (OrderFragment) viewPager.getAdapter().instantiateItem(viewPager, position);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-        // Give the TabLayout the ViewPager
-        SlidingTabLayout tabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
-        tabLayout.setDistributeEvenly(true);
-        tabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.accent_material_dark);
-            }
-        });
-        tabLayout.setViewPager(viewPager);
+        fragmentManager = getFragmentManager();
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.rg_tab);
+        radioGroup.setOnCheckedChangeListener(this);
 
         // set tab if specified
         int position  = getIntent().getIntExtra("position", 0);
         Log.i(TAG, new Integer(position).toString());
-        viewPager.setCurrentItem(position);
+        if(position == 0){
+            findViewById(R.id.rb_map).performClick();
+        }
+        if(position == 1){
+            findViewById(R.id.rb_my).performClick();
+        }
 
-        // Set a ToolBar to replace the ActionBar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //actionbar with search
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setCustomView(R.layout.action_bar_layout);
 
 
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        actionBar.setDisplayShowHomeEnabled(true);
-//        actionBar.setCustomView(R.layout.action_bar_layout);
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        Fragment fragment = FragmentFactory.getInstanceByIndex(checkedId);
+        transaction.replace(R.id.content, fragment);
+        transaction.commit();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.meishi_menu, menu);
-        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchViewAction = (SearchView) MenuItemCompat
-                .getActionView(searchMenuItem);
 
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchableInfo searchableInfo = searchManager
-                .getSearchableInfo(getComponentName());
-        searchViewAction.setSearchableInfo(searchableInfo);
-        searchViewAction.setIconifiedByDefault(false);
+//        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+//        SearchView searchViewAction = (SearchView) getActionView(searchMenuItem);
+//
+//        // Get the SearchView and set the searchable configuration
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchableInfo searchableInfo = searchManager
+//                .getSearchableInfo(getComponentName());
+//        searchViewAction.setSearchableInfo(searchableInfo);
+//        searchViewAction.setIconifiedByDefault(false);
 
         return true;
     }
@@ -114,15 +94,13 @@ public class MeishiActivity extends AppCompatActivity {
             case R.id.logout:
                 logout();
                 return true;
-            case R.id.action_search:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void logout() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         LogoutFragment alertDialog = LogoutFragment.newInstance(getString(R.string.logout_title));
         alertDialog.show(fm, "fragment_alert");
     }
@@ -150,6 +128,5 @@ public class MeishiActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 }

@@ -1,20 +1,21 @@
 <resources>
 
-    <style name="ActionBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="">
+        <!-- Customize your theme here. -->
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
-
-    <style name="SearchViewStyleMyApp" parent="Widget.AppCompat.SearchView">
-        <!-- Background for the search query section (e.g. EditText) -->
-        <!-- <item name="queryBackground">@android:color/black</item> -->
-        ...
-        <!-- note that this is how you stye your hint icon -->
-        <item name="searchHintIcon">@drawable/abc_ic_go_search_api_mtrl_alpha</item>
-    </style>
-
-    <style name="MyThemeOverlay.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="searchViewStyle">@style/SearchViewStyleMyApp</item>
+    <style name="weibo_tab">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">8dip</item>
+        <item name="android:paddingBottom">4dip</item>
+        <item name="android:background">@drawable/weibolist_bottombar_itembg_selector</item>
+        <item name="android:textColor">@color/weibolist_bottombar_textcolor_selector</item>
+        <item name="android:button">@null</item>
     </style>
 
     <style name="Widget" />

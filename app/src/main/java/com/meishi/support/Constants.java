@@ -13,6 +13,8 @@ public interface Constants {
     String FIND_CUSTOMER_URL = CUSTOMERS_URL + "/search/findByIdentity?clientId=";
     String ORDERS_URL = BASE_URL + "/entity/orders";
     String FIND_ORDER_URL = ORDERS_URL + "/search/findByClientId?clientId=";
+    String COOKS_URL = BASE_URL + "/entity/cooks";
+    String FIND_COOK_URL = COOKS_URL + "/search/findByLocationNear?";
     String ADMIN_TEST_USER = "123456";
     String ADMIN_TEST_PASSWORD = "111";
 

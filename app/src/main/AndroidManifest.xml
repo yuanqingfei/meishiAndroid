@@ -22,7 +22,7 @@
     <application
         android:name=".MeishiApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <meta-data
@@ -30,18 +30,13 @@
             android:value="e1CZEDESB5xPbr0SWoaImfmC" />
 
         <activity
-            android:name=".MeishiActivity"
-            android:uiOptions="splitActionBarWhenNarrow">
+            android:name=".MeishiActivity">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value="com.meishi.search.SearchResultsActivity" />
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -61,20 +56,16 @@
         <activity
             android:name=".login.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/ActionBarTheme"
-            android:windowSoftInputMode="adjustResize|stateVisible">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MeishiActivity" />
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:parentActivityName=".MeishiActivity">
         </activity>
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:theme="@style/ActionBarTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".login.LoginActivity" />
+            android:parentActivityName=".login.LoginActivity">
         </activity>
     </application>
 
 </manifest>
+
+    <!--android:uiOptions="splitActionBarWhenNarrow"-->
