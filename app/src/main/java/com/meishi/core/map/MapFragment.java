@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -14,22 +13,18 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.offline.MKOLUpdateElement;
 import com.baidu.mapapi.map.offline.MKOfflineMap;
 import com.baidu.mapapi.map.offline.MKOfflineMapListener;
 import com.baidu.mapapi.model.LatLng;
-import com.meishi.R;
+import com.meishi.rest.GetCookTask;
+
+import org.springframework.data.geo.Point;
 
 /**
  * Created by Aaron on 2015/6/7.
@@ -43,12 +38,6 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
     private LocationClient mLocClient;
 
     private MKOfflineMap mOffline;
-
-    private BitmapDescriptor bd = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_gcoding);
-
-    private Marker marker;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,45 +85,20 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
 
             @Override
             public void onMapStatusChange(MapStatus mapStatus) {
-                LatLng newCenter = mapStatus.target;
-//            Toast.makeText(mMapView.getContext(), "location: " + newCenter.latitude + " " + newCenter.longitude, Toast.LENGTH_LONG).show();
-                // TODO: I will take this as nearBy search with BaiduAPI then manually add
-                // overlay
             }
 
             @Override
             public void onMapStatusChangeFinish(MapStatus mapStatus) {
+                LatLng location = mapStatus.target;
+                GetCookTask getCookTask = new GetCookTask(getActivity(), mBaiduMap);
+                getCookTask.execute(new Point[]{new Point(location.latitude, location.longitude)});
             }
         });
         setupLocaion();
 
-        // init marker
-        LatLng exampleLoc = new LatLng(31.139019, 121.441194);
-        OverlayOptions markerOO = new MarkerOptions().position(exampleLoc).icon(bd).zIndex(9).draggable(false);
-        marker = (Marker) (mBaiduMap.addOverlay(markerOO));
-
-        // add marker listener
-        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Button button = new Button(getActivity().getApplicationContext());
-                button.setText("老刘");
-                InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
-                    public void onInfoWindowClick() {
-                        // transfer to dish detail activity
-                        mBaiduMap.hideInfoWindow();
-                    }
-                };
-
-                LatLng position = marker.getPosition();
-                InfoWindow mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), position, -47, listener);
-                mBaiduMap.showInfoWindow(mInfoWindow);
-                return true;
-            }
-        });
-
         return mMapView;
     }
+
 
     @Override
     public void onGetOfflineMapState(int type, int state) {
@@ -171,13 +135,18 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
                     return;
                 }
 
-                MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius()).direction(100)
+                MyLocationData locData = new MyLocationData.Builder()
+//                        .accuracy(location.getRadius()).direction(100)
                         .latitude(location.getLatitude()).longitude(location.getLongitude()).build();
                 mBaiduMap.setMyLocationData(locData);
 
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location
                         .getLongitude()));
                 mBaiduMap.animateMapStatus(u);
+
+                // search cook based on client current location.
+                GetCookTask getCookTask = new GetCookTask(getActivity(), mBaiduMap);
+                getCookTask.execute(new Point[]{new Point(location.getLatitude(), location.getLongitude())});
             }
         });
         LocationClientOption option = new LocationClientOption();
@@ -210,7 +179,6 @@ public class MapFragment extends Fragment implements MKOfflineMapListener {
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mLocClient.stop();
-        bd.recycle();
         super.onDestroy();
     }
 

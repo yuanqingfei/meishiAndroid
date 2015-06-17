@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.meishi.core.FragmentFactory;
 import com.meishi.login.LoginActivity;
 import com.meishi.login.LogoutFragment;
+import com.meishi.support.Constants;
 
 
 /**
@@ -39,7 +40,7 @@ public class MeishiActivity extends Activity implements RadioGroup.OnCheckedChan
         radioGroup.setOnCheckedChangeListener(this);
 
         // set tab if specified
-        int position  = getIntent().getIntExtra("position", 0);
+        int position  = getIntent().getIntExtra(Constants.POSITION_BUNDILE_ID, 0);
         Log.i(TAG, new Integer(position).toString());
         if(position == 0){
             findViewById(R.id.rb_map).performClick();
@@ -53,8 +54,6 @@ public class MeishiActivity extends Activity implements RadioGroup.OnCheckedChan
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setCustomView(R.layout.action_bar_layout);
-
-
     }
 
     @Override

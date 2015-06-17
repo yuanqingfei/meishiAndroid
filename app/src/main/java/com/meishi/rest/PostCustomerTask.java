@@ -25,9 +25,7 @@ public class PostCustomerTask extends AsyncTask<Customer, Void, HttpStatus> {
     private String TAG = PostCustomerTask.class.getSimpleName();
 
     private RegisterActivity registerActivity;
-
     private SimpleAsync async;
-
     private String identity;
 
     public PostCustomerTask(RegisterActivity activity, String identity) {
@@ -74,7 +72,7 @@ public class PostCustomerTask extends AsyncTask<Customer, Void, HttpStatus> {
             ((MeishiApplication) registerActivity.getApplication()).setCustomerId(identity);
 
             Intent intent = new Intent(registerActivity, MeishiActivity.class);
-            intent.putExtra("position", 0);
+            intent.putExtra(Constants.POSITION_BUNDILE_ID, 0);
             registerActivity.startActivity(intent);
         } else {
             alertDialog.setMessage("抱歉，账户创建失败！");

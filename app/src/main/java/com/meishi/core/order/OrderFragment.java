@@ -48,8 +48,8 @@ public class OrderFragment extends ListFragment {
         if (app.getCustomerId() != null) {
             Log.i(TAG, app.getCustomerId());
 
-            getTask = new GetOrderTask(getActivity(), adapter, app.getCustomerId());
-            getTask.execute();
+            getTask = new GetOrderTask(getActivity(), adapter);
+            getTask.execute(app.getCustomerId());
         } else {
             Log.i(TAG, "customerId is null");
             getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));

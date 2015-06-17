@@ -21,23 +21,17 @@ import java.util.List;
 /**
  * Created by Aaron on 2015/6/12.
  */
-public class GetOrderTask extends AsyncTask<Void, Void, List<Order>> {
+public class GetOrderTask extends AsyncTask<String, Void, List<Order>> {
 
     private String TAG = GetOrderTask.class.getSimpleName();
-
-    private Activity activity;
 
     private SimpleAsync async;
 
     private OrderListAdapter listAdapter;
 
-    private String customerId;
-
-    public GetOrderTask(Activity activity, OrderListAdapter listAdapter, String customerId) {
-        this.activity = activity;
+    public GetOrderTask(Activity activity, OrderListAdapter listAdapter) {
         this.async = new SimpleAsync(activity);
         this.listAdapter = listAdapter;
-        this.customerId = customerId;
     }
 
     @Override
@@ -46,13 +40,13 @@ public class GetOrderTask extends AsyncTask<Void, Void, List<Order>> {
     }
 
     @Override
-    protected List<Order> doInBackground(Void... params) {
+    protected List<Order> doInBackground(String... params) {
         List<Order> orderList = new ArrayList<>();
         try {
             RestTemplate restTemplate = async.createRestTemplate();
 
             HttpEntity<Object> requestEntity = async.createGetRequest();
-            ResponseEntity<String> response = restTemplate.exchange(Constants.FIND_ORDER_URL + customerId, HttpMethod.GET, requestEntity,
+            ResponseEntity<String> response = restTemplate.exchange(Constants.FIND_ORDER_URL + params[0], HttpMethod.GET, requestEntity,
                     String.class);
 
             Log.i(TAG, response.getStatusCode().toString());

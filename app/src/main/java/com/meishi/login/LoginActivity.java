@@ -254,7 +254,7 @@ public class LoginActivity extends Activity {
                 // set current user to application
                 ((MeishiApplication) getApplication()).setCustomerId(identity);
                 Intent intent = new Intent(LoginActivity.this, MeishiActivity.class);
-                intent.putExtra("position", 1);
+                intent.putExtra(Constants.POSITION_BUNDILE_ID, 1);
                 startActivity(intent);
 
             } else {

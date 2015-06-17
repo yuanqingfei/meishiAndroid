@@ -29,14 +29,14 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="e1CZEDESB5xPbr0SWoaImfmC" />
 
-        <activity
-            android:name=".MeishiActivity">
+        <activity android:name=".MeishiActivity">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value="com.meishi.search.SearchResultsActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -56,14 +56,17 @@
         <activity
             android:name=".login.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:parentActivityName=".MeishiActivity">
-        </activity>
+            android:parentActivityName=".MeishiActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity
             android:name=".register.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".login.LoginActivity">
-        </activity>
+            android:parentActivityName=".login.LoginActivity"/>
+
+        <activity
+            android:name=".core.cook.CookActivity"
+            android:label="@string/title_activity_cook"
+            android:parentActivityName=".MeishiActivity" />
     </application>
 
 </manifest>

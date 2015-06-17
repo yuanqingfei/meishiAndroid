@@ -3,6 +3,7 @@ package com.meishi.rest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 
+import com.meishi.MeishiApplication;
 import com.meishi.model.Customer;
 import com.meishi.support.Constants;
 
@@ -57,7 +58,9 @@ public class SimpleAsync implements AsyncInterface {
 
     public HttpEntity<Object> createGetRequest() {
         HttpHeaders requestHeaders = new HttpHeaders();
-        HttpAuthentication authHeader = new HttpBasicAuthentication(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD);
+        String currentClientId = ((MeishiApplication)activity.getApplication()).getCustomerId();
+        String loginUser = currentClientId == null ? Constants.ADMIN_TEST_USER : currentClientId;
+        HttpAuthentication authHeader = new HttpBasicAuthentication(loginUser, Constants.ADMIN_TEST_PASSWORD);
         requestHeaders.setAuthorization(authHeader);
         requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
         return new HttpEntity<Object>(requestHeaders);
@@ -72,5 +75,18 @@ public class SimpleAsync implements AsyncInterface {
         requestHeaders.setAuthorization(authHeader);
         requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
         return new HttpEntity<Customer>(param, requestHeaders);
+    }
+
+    public HttpEntity<String> createPostOrderRequest(OrderRequest or) {
+        System.setProperty("http.keepAlive", "false");
+        HttpHeaders requestHeaders = new HttpHeaders();
+//            requestHeaders.set("Connection", "Close");
+        HttpAuthentication authHeader = new HttpBasicAuthentication(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD);
+        requestHeaders.setAuthorization(authHeader);
+        requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        String request = "{\"meishiList\" : \"" + or.getDish().getName() + "\", \"clientLocation\" : \"\", " +
+                "\"clientId\" : \"" + or.getClientId() + "\"}";
+        return new HttpEntity<String>(request, requestHeaders);
     }
 }
