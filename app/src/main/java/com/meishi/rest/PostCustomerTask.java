@@ -1,6 +1,7 @@
 package com.meishi.rest;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class PostCustomerTask extends AsyncTask<Customer, Void, HttpStatus> {
     private RegisterActivity registerActivity;
     private SimpleAsync async;
     private String identity;
+    private Customer customer;
 
     public PostCustomerTask(RegisterActivity activity, String identity) {
         this.registerActivity = activity;
@@ -44,8 +46,9 @@ public class PostCustomerTask extends AsyncTask<Customer, Void, HttpStatus> {
         if (params.length < 1) {
             return null;
         }
+        customer = params[0];
         try {
-            HttpEntity<Customer> requestEntity = async.createPostCustomerRequest(params[0]);
+            HttpEntity<Customer> requestEntity = async.createPostCustomerRequest(customer);
             RestTemplate restTemplate = async.createRestTemplate();
 
             // Make the network request, posting the message, expecting a String in response from the server
@@ -65,18 +68,26 @@ public class PostCustomerTask extends AsyncTask<Customer, Void, HttpStatus> {
     @Override
     protected void onPostExecute(HttpStatus result) {
         async.dismissProgressDialog();
-        AlertDialog alertDialog = registerActivity.getAlertDialog();
+        AlertDialog alertDialog = async.getDialog("账户创建");
         if (HttpStatus.CREATED.equals(result)) {
             alertDialog.setMessage("恭喜，账户创建成功，您可以下单了！");
-
-            ((MeishiApplication) registerActivity.getApplication()).setCustomerId(identity);
-
-            Intent intent = new Intent(registerActivity, MeishiActivity.class);
-            intent.putExtra(Constants.POSITION_BUNDILE_ID, 0);
-            registerActivity.startActivity(intent);
         } else {
             alertDialog.setMessage("抱歉，账户创建失败！");
         }
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        ((MeishiApplication) registerActivity.getApplication()).setCustomerId(identity);
+                        ((MeishiApplication) registerActivity.getApplication()).setCustomer(customer);
+
+                        Intent intent = new Intent(registerActivity, MeishiActivity.class);
+                        intent.putExtra(Constants.POSITION_BUNDILE_ID, 0);
+                        registerActivity.startActivity(intent);
+                    }
+                });
         alertDialog.show();
 
     }

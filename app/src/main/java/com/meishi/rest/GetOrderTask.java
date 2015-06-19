@@ -36,7 +36,7 @@ public class GetOrderTask extends AsyncTask<String, Void, List<Order>> {
 
     @Override
     protected void onPreExecute() {
-        async.showProgressDialog("请等待，正在获取后台数据...");
+        async.showProgressDialog("请等待，正在获取订单数据...");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class GetOrderTask extends AsyncTask<String, Void, List<Order>> {
             ResponseEntity<String> response = restTemplate.exchange(Constants.FIND_ORDER_URL + params[0], HttpMethod.GET, requestEntity,
                     String.class);
 
-            Log.i(TAG, response.getStatusCode().toString());
+            Log.d(TAG, response.getStatusCode().toString());
 
             JSONObject resultJson = new JSONObject(response.getBody());
             if (resultJson != null) {

@@ -2,8 +2,6 @@ package com.meishi.register;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +23,7 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
 
     private static final String TAG = RegisterActivity.class.getName();
 
-    private GeoCoder mSearch = null;
+    private GeoCoder mSearch;
 
     private Button submitButton;
     private EditText identity;
@@ -37,8 +35,6 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
     private Customer customer;
 
     private PostCustomerTask postTask;
-
-    private AlertDialog alertDialog;
 
     @Override
     protected void onStart() {
@@ -53,7 +49,6 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // create location converter for future
         mSearch = GeoCoder.newInstance();
         mSearch.setOnGetGeoCodeResultListener(this);
 
@@ -78,22 +73,7 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
                 mSearch.geocode(new GeoCodeOption().city(Constants.CITY).address(addressValue));
             }
         });
-
-        // add attached alert diaglog
-        alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("账户创建");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
     }
-
-    public AlertDialog getAlertDialog() {
-        return alertDialog;
-    }
-
 
     @Override
     public void onGetGeoCodeResult(GeoCodeResult result) {
@@ -123,9 +103,6 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
     protected void onDestroy() {
         mSearch.destroy();
         super.onDestroy();
-        if (alertDialog != null) {
-            alertDialog.dismiss();
-        }
     }
 
 

@@ -1,10 +1,11 @@
 package com.meishi.rest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 
-import com.meishi.MeishiApplication;
 import com.meishi.model.Customer;
+import com.meishi.model.OrderRequest;
 import com.meishi.support.Constants;
 
 import org.springframework.http.HttpAuthentication;
@@ -24,9 +25,19 @@ import java.nio.charset.Charset;
 public class SimpleAsync implements AsyncInterface {
     private Activity activity;
     private ProgressDialog progressDialog;
+    private AlertDialog alertDialog;
 
     public SimpleAsync(Activity activity) {
         this.activity = activity;
+
+        // add attached alert diaglog
+
+    }
+
+    public AlertDialog getDialog(String title){
+        alertDialog = new AlertDialog.Builder(activity).create();
+        alertDialog.setTitle(title);
+        return alertDialog;
     }
 
     public void showLoadingProgressDialog() {
@@ -57,36 +68,30 @@ public class SimpleAsync implements AsyncInterface {
     }
 
     public HttpEntity<Object> createGetRequest() {
-        HttpHeaders requestHeaders = new HttpHeaders();
-        String currentClientId = ((MeishiApplication)activity.getApplication()).getCustomerId();
-        String loginUser = currentClientId == null ? Constants.ADMIN_TEST_USER : currentClientId;
-        HttpAuthentication authHeader = new HttpBasicAuthentication(loginUser, Constants.ADMIN_TEST_PASSWORD);
-        requestHeaders.setAuthorization(authHeader);
-        requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-        return new HttpEntity<Object>(requestHeaders);
+        return new HttpEntity<Object>(getHttpHeaders(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD));
+    }
+
+    public HttpEntity<Object> createGetRequest(String userName, String password) {
+        return new HttpEntity<Object>(getHttpHeaders(userName, password));
     }
 
 
     public HttpEntity<Customer> createPostCustomerRequest(Customer param) {
-        System.setProperty("http.keepAlive", "false");
-        HttpHeaders requestHeaders = new HttpHeaders();
-//            requestHeaders.set("Connection", "Close");
-        HttpAuthentication authHeader = new HttpBasicAuthentication(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD);
-        requestHeaders.setAuthorization(authHeader);
-        requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        HttpHeaders requestHeaders = getHttpHeaders(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD);
         return new HttpEntity<Customer>(param, requestHeaders);
     }
 
-    public HttpEntity<String> createPostOrderRequest(OrderRequest or) {
+    public HttpEntity<OrderRequest> createPostOrderRequest(OrderRequest or, String userName, String password) {
+        HttpHeaders requestHeaders = getHttpHeaders(userName, password);
+        return new HttpEntity<OrderRequest>(or, requestHeaders);
+    }
+
+    public HttpHeaders getHttpHeaders(String userName, String password) {
         System.setProperty("http.keepAlive", "false");
         HttpHeaders requestHeaders = new HttpHeaders();
-//            requestHeaders.set("Connection", "Close");
-        HttpAuthentication authHeader = new HttpBasicAuthentication(Constants.ADMIN_TEST_USER, Constants.ADMIN_TEST_PASSWORD);
+        HttpAuthentication authHeader = new HttpBasicAuthentication(userName, password);
         requestHeaders.setAuthorization(authHeader);
         requestHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-
-        String request = "{\"meishiList\" : \"" + or.getDish().getName() + "\", \"clientLocation\" : \"\", " +
-                "\"clientId\" : \"" + or.getClientId() + "\"}";
-        return new HttpEntity<String>(request, requestHeaders);
+        return requestHeaders;
     }
 }

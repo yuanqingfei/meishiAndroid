@@ -12,8 +12,8 @@
         <TextView
             android:id="@+id/header_orderId"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="订单号码"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -22,8 +22,8 @@
         <TextView
             android:id="@+id/header_orderDate"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="下单日期"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -32,8 +32,8 @@
         <TextView
             android:id="@+id/header_price"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="价格"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -41,18 +41,35 @@
         <TextView
             android:id="@+id/header_status"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="状态"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
-    <ListView
-        android:id="@android:id/list"
+    <!--    <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </ListView>-->
+
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </ScrollView>
 
 
 </LinearLayout>
+
+    <!--android:gravity="top"--><!--android:layout_weight="2"-->

@@ -18,6 +18,8 @@ public interface Constants {
     String DISHES_URL = BASE_URL + "/entity/dishes";
     String CRATE_ORDER_URL = BASE_URL + "action/createOrder";
 
+    String SEARCH_SCOPE = "3km";
+
 
     String ADMIN_TEST_USER = "1234567";
     String ADMIN_TEST_PASSWORD = "111";

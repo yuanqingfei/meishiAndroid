@@ -18,6 +18,7 @@ import com.meishi.model.OrderStatusEntry;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Aaron on 2015/6/10.
@@ -56,7 +57,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
 
         Order order = orders.get(position);
         holder.orderId.setText(order.getId());
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINA);
 
         String dateString = dateFormat.format(order.getOrderTime());
         holder.orderDate.setText(dateString);

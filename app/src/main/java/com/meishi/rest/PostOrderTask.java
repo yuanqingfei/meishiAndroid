@@ -1,9 +1,15 @@
 package com.meishi.rest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
+import com.meishi.MeishiActivity;
+import com.meishi.MeishiApplication;
+import com.meishi.model.Customer;
+import com.meishi.model.OrderRequest;
 import com.meishi.support.Constants;
 
 import org.springframework.http.HttpEntity;
@@ -29,30 +35,40 @@ public class PostOrderTask extends AsyncTask<OrderRequest, Void, HttpStatus> {
     }
 
     @Override
-    protected void onPreExecute() {
-        async.showProgressDialog("请稍等，正在下单中...");
-    }
-
-    @Override
     protected HttpStatus doInBackground(OrderRequest... params) {
         if (params.length < 1) {
             return HttpStatus.BAD_REQUEST;
         }
 
         RestTemplate client = async.createRestTemplate();
-        HttpEntity<String> createPostOrderRequest = async.createPostOrderRequest(params[0]);
+        Customer customer = ((MeishiApplication)activity.getApplication()).getCustomer();
+        HttpEntity<OrderRequest> orderRequestHttpEntity = async.createPostOrderRequest(params[0],
+                customer.getIdentity(),customer.getPassword());
         ResponseEntity<String> response = client.exchange(Constants.CRATE_ORDER_URL, HttpMethod.POST,
-                createPostOrderRequest, String.class);
+                orderRequestHttpEntity, String.class);
         return response.getStatusCode();
     }
 
     @Override
     protected void onPostExecute(HttpStatus result) {
-        async.dismissProgressDialog();
-        if(HttpStatus.CREATED.equals(result)){
-            Toast.makeText(activity, "下单成功", Toast.LENGTH_SHORT);
+        AlertDialog alertDialog = async.getDialog("下单");
+        if (HttpStatus.OK.equals(result)) {
+            alertDialog.setMessage("恭喜，下单成功了！");
         } else {
-            Toast.makeText(activity, "下单失败", Toast.LENGTH_SHORT);
+            alertDialog.setMessage("抱歉，下单失败！");
         }
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(activity, MeishiActivity.class);
+                        intent.putExtra(Constants.POSITION_BUNDILE_ID, 1);
+                        activity.startActivity(intent);
+                    }
+                });
+
+        alertDialog.show();
+
     }
 }
