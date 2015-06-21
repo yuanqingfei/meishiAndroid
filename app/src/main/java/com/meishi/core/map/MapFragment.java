@@ -37,6 +37,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.meishi.R;
 import com.meishi.rest.GetCookTask;
+import com.meishi.support.Constants;
 
 import org.springframework.data.geo.Point;
 
@@ -202,7 +203,7 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
     private void showCooksAndAddress(LatLng baiduLoc) {
         mBaiduMap.clear();
         OverlayOptions dotOO = new DotOptions().center(baiduLoc).color(Color.RED).radius(10);
-        OverlayOptions circleOO = new CircleOptions().center(baiduLoc).radius(3000)
+        OverlayOptions circleOO = new CircleOptions().center(baiduLoc).radius(Integer.valueOf(Constants.SEARCH_SCOPE)*1000)
                 .fillColor(0X1f000000).stroke(new Stroke(2, Color.BLUE));
         mBaiduMap.addOverlay(dotOO);
         mBaiduMap.addOverlay(circleOO);

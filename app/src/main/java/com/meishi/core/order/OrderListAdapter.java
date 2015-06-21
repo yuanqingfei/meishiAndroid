@@ -57,7 +57,8 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
 
         Order order = orders.get(position);
         holder.orderId.setText(order.getId());
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINA);
+        // MM means month, HH means 24 format
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
 
         String dateString = dateFormat.format(order.getOrderTime());
         holder.orderDate.setText(dateString);

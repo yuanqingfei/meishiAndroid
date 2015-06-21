@@ -8,7 +8,8 @@ public interface Constants {
     String CITY = "上海";
 
     String BASE_URL = "http://192.168.0.119:8080";
-    //    String BASE_URL = "http://114.90.9.40:8080";
+
+//        String BASE_URL = "http://116.237.137.31:8080";
     String CUSTOMERS_URL = BASE_URL + "/entity/customers";
     String FIND_CUSTOMER_URL = CUSTOMERS_URL + "/search/findByIdentity?clientId=";
     String ORDERS_URL = BASE_URL + "/entity/orders";
@@ -18,7 +19,7 @@ public interface Constants {
     String DISHES_URL = BASE_URL + "/entity/dishes";
     String CRATE_ORDER_URL = BASE_URL + "action/createOrder";
 
-    String SEARCH_SCOPE = "3km";
+    String SEARCH_SCOPE = "3";
 
 
     String ADMIN_TEST_USER = "1234567";

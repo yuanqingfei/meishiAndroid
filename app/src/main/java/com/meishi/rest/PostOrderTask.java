@@ -58,7 +58,7 @@ public class PostOrderTask extends AsyncTask<OrderRequest, Void, HttpStatus> {
             alertDialog.setMessage("抱歉，下单失败！");
         }
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "确定",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

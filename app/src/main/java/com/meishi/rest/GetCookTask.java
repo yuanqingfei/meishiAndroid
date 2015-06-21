@@ -24,8 +24,6 @@ import com.meishi.support.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -59,10 +57,9 @@ public class GetCookTask extends AsyncTask<Point, Void, List<Cook>> {
         try {
             RestTemplate restTemplate = async.createRestTemplate();
             HttpEntity<Object> requestEntity = async.createGetRequest();
-            Distance distance = new Distance(3, Metrics.KILOMETERS);
             ResponseEntity<String> response = restTemplate.exchange(
                     Constants.FIND_COOK_URL + "location=" + params[0].getX()+","+params[0].getY()
-                            + "&distance=" + Constants.SEARCH_SCOPE, HttpMethod.GET, requestEntity, String.class);
+                            + "&distance=" + Constants.SEARCH_SCOPE + "km", HttpMethod.GET, requestEntity, String.class);
 
             Log.d(TAG, response.getBody());
 

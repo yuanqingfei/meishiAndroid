@@ -47,6 +47,9 @@ android {
         exclude 'META-INF/spring.schemas'
         exclude 'META-INF/spring.tooling'
         exclude 'META-INF/ASL2.0'
+        exclude 'notice.txt'
+        exclude 'license.txt'
+        exclude 'changelog.txt'
     }
 
     buildTypes {
@@ -66,10 +69,31 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile ('com.meishi:meishi-model:1.0.0-SNAPSHOT') {
-        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude module: 'commons-logging'
         exclude module: 'spring-beans'
         exclude module: 'spring-core'
     }
 
-    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M2'
+    compile ('org.springframework.android:spring-android-rest-template:2.0.0.M2'){
+        exclude module: 'spring-android-core'
+    }
+
+    compile ('org.springframework.hateoas:spring-hateoas:0.17.0.RELEASE'){
+        exclude module: 'commons-logging'
+        exclude module: 'spring-beans'
+        exclude module: 'spring-core'
+        exclude module: 'spring-web'
+    }
+
+    compile ('com.jayway.jsonpath:json-path:2.0.0'){
+        exclude module: 'asm'
+    }
+
+    compile 'org.springframework:spring-core:4.1.6.RELEASE'
+    compile 'org.springframework:spring-beans:4.1.6.RELEASE'
+
+    compile ('org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE'){
+        exclude module: 'spring-beans'
+        exclude module: 'spring-core'
+    }
 }
