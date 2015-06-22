@@ -14,12 +14,21 @@ public class MeishiApplication extends Application {
 
     private Customer customer;
 
+    private String currentCity;
+
     @Override
     public void onCreate() {
         super.onCreate();
         SDKInitializer.initialize(this);
     }
 
+    public String getCurrentCity() {
+        return currentCity;
+    }
+
+    public void setCurrentCity(String currentCity) {
+        this.currentCity = currentCity;
+    }
 
     public String getCustomerId() {
         return customerId;

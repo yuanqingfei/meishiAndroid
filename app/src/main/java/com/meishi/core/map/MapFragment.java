@@ -35,6 +35,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.meishi.MeishiApplication;
 import com.meishi.R;
 import com.meishi.rest.GetCookTask;
 import com.meishi.support.Constants;
@@ -56,11 +57,15 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
 
     private BaiduMap mBaiduMap;
 
-    private LocationClient mLocClient;
+    private LocationClient mLocationClient;
 
     private MKOfflineMap mOffline;
 
-    private GeoCoder mSearch = null;
+    private GeoCoder mGeoCoder = null;
+
+    private Boolean needLocate = true;
+
+    private static Boolean IS_FIRST = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,8 +77,8 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
         importFromSDCard();
 
         // create location converter for future
-        mSearch = GeoCoder.newInstance();
-        mSearch.setOnGetGeoCodeResultListener(this);
+        mGeoCoder = GeoCoder.newInstance();
+        mGeoCoder.setOnGetGeoCodeResultListener(this);
 
         BaiduMapOptions options = new BaiduMapOptions().compassEnabled(true).zoomControlsEnabled(false)
                 .scaleControlEnabled(false).rotateGesturesEnabled(false).overlookingGesturesEnabled(false);
@@ -82,7 +87,7 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
         mBaiduMap = mMapView.getMap();
 
         mBaiduMap.setMyLocationEnabled(true);
-        mLocClient = new LocationClient(getActivity().getApplicationContext());
+        mLocationClient = new LocationClient(getActivity().getApplicationContext());
 
         mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
             @Override
@@ -124,7 +129,8 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
         locateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLocClient.start();
+                needLocate = true;
+                mLocationClient.start();
             }
         });
 
@@ -145,38 +151,51 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mLocClient.registerLocationListener(new BDLocationListener() {
+        mLocationClient.registerLocationListener(new BDLocationListener() {
 
             @Override
             public void onReceiveLocation(BDLocation location) {
                 if (location == null || mMapView == null) {
                     return;
                 }
+
                 LatLng baiduLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                MyLocationData locData = new MyLocationData.Builder().
+                MyLocationData locData = new MyLocationData.Builder()
 //                        .accuracy(location.getRadius()).direction(100)
-        latitude(location.getLatitude()).longitude(location.getLongitude()).build();
+                        .latitude(location.getLatitude()).longitude(location.getLongitude()).build();
                 mBaiduMap.setMyLocationData(locData);
 
+                if (needLocate) {
+                    needLocate = false;
+                    MapStatus newStatus = new MapStatus.Builder().target(baiduLoc).zoom(14).build();
+                    mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(newStatus));
+                }
 
-                MapStatus newStatus = new MapStatus.Builder().target(baiduLoc).zoom(14).build();
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(newStatus));
+                // just for the first time show circle and cooks.
+                if (IS_FIRST) {
+                    IS_FIRST = false;
+                    showCooksAndAddress(baiduLoc);
 
-                showCooksAndAddress(baiduLoc);
+                    // get current City Name for future usage
+                    location.getCountry();
+                    String city = location.getCity();
+                    Log.d(TAG, city);
+                    ((MeishiApplication) getActivity().getApplication()).setCurrentCity(city);
+
+                    mLocationClient.getLocOption().setIsNeedAddress(false);
+                }
+
             }
         });
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
-        option.setScanSpan(1000);
+        option.setIsNeedAddress(true); // so that we can get city at init.
+        option.setScanSpan(5000);
+        option.setProdName("meishi");
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        mLocClient.setLocOption(option);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mLocClient.start();
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
     }
 
     @Override
@@ -194,7 +213,7 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
                 Toast.makeText(getActivity(), String.format("add offlinemap num:%d", state), Toast.LENGTH_SHORT);
                 break;
             case MKOfflineMap.TYPE_VER_UPDATE:
-                // MKOLUpdateElement e = mOffline.getUpdateInfo(state);
+//                 MKOLUpdateElement e = mOffline.getUpdateInfo(state);
                 break;
         }
 
@@ -202,16 +221,18 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
 
     private void showCooksAndAddress(LatLng baiduLoc) {
         mBaiduMap.clear();
+
+        mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(baiduLoc));
+
         OverlayOptions dotOO = new DotOptions().center(baiduLoc).color(Color.RED).radius(10);
-        OverlayOptions circleOO = new CircleOptions().center(baiduLoc).radius(Integer.valueOf(Constants.SEARCH_SCOPE)*1000)
+        OverlayOptions circleOO = new CircleOptions().center(baiduLoc).radius(Integer.valueOf(Constants.SEARCH_SCOPE) * 1000)
                 .fillColor(0X1f000000).stroke(new Stroke(2, Color.BLUE));
         mBaiduMap.addOverlay(dotOO);
         mBaiduMap.addOverlay(circleOO);
 
-        mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(baiduLoc));
         GetCookTask getCookTask = new GetCookTask(getActivity(), mBaiduMap);
         try {
-            getCookTask.execute(new Point[]{new Point(baiduLoc.latitude, baiduLoc.longitude)}).get(3, TimeUnit.SECONDS);
+            getCookTask.execute(new Point[]{new Point(baiduLoc.latitude, baiduLoc.longitude)}).get(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Log.e(TAG, e.getMessage(), e);
         } catch (ExecutionException e) {
@@ -241,27 +262,25 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
         mOffline.destroy();
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
-        mLocClient.stop();
+        mLocationClient.stop();
         super.onDestroy();
     }
 
     @Override
     public void onGetGeoCodeResult(GeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(getActivity(), "抱歉，您提供的地址无法定位，请输入更具体地址。", Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(getActivity(), getString(R.string.can_not_parse_out_latlog), Toast.LENGTH_SHORT).show();
             return;
         }
-//
-//        Toast.makeText(getActivity(), result.getLocation().longitude + " " + result.getLocation().latitude,
-//                Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(getActivity(), result.getLocation().longitude + " " + result.getLocation().latitude,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(getActivity(), "抱歉，您提供的地址无法定位，请输入更具体地址。", Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(getActivity(), getString(R.string.can_not_parse_out_address), Toast.LENGTH_SHORT).show();
             return;
         }
 

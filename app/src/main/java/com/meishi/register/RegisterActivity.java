@@ -14,10 +14,10 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.meishi.MeishiApplication;
 import com.meishi.R;
 import com.meishi.model.Customer;
 import com.meishi.rest.PostCustomerTask;
-import com.meishi.support.Constants;
 
 public class RegisterActivity extends Activity implements OnGetGeoCoderResultListener {
 
@@ -70,7 +70,8 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
                 customer.setTelephoneNumber(identity.getText().toString());
                 String addressValue = address.getText().toString();
                 customer.setAddress(addressValue);
-                mSearch.geocode(new GeoCodeOption().city(Constants.CITY).address(addressValue));
+                String city = ((MeishiApplication)getApplication()).getCurrentCity();
+                mSearch.geocode(new GeoCodeOption().city(city).address(addressValue));
             }
         });
     }

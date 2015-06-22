@@ -11,5 +11,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="can_not_parse_out_latlog">抱歉，所在地址无法定位经纬度</string>
+    <string name="can_not_parse_out_address">抱歉，所在方位无法解析出地址</string>
+
 
 </resources>

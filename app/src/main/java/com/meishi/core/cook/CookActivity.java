@@ -104,7 +104,8 @@ public class CookActivity extends Activity implements OnGetGeoCoderResultListene
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (addressEdit.getText() != null && addressEdit.getText().length() > 0) {
                                         finalAddress = addressEdit.getText().toString();
-                                        mSearch.geocode(new GeoCodeOption().city(Constants.CITY).address(finalAddress));
+                                        String city = ((MeishiApplication)getApplication()).getCurrentCity();
+                                        mSearch.geocode(new GeoCodeOption().city(city).address(finalAddress));
                                     } else {
                                         post(null);
                                     }
@@ -119,22 +120,11 @@ public class CookActivity extends Activity implements OnGetGeoCoderResultListene
         }
     }
 
-    @Override
-    public void onGetGeoCodeResult(GeoCodeResult result) {
-        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(this, "抱歉，您提供的地址无法定位，请输入更具体地址。", Toast.LENGTH_LONG)
-                    .show();
-            return;
-        }
-
-        post(result);
-    }
-
-    private void post(GeoCodeResult result){
+    private void post(GeoCodeResult result) {
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setClientId(((MeishiApplication) getApplication()).getCustomerId());
         orderRequest.setDishName(dishName);
-        if(result != null) {
+        if (result != null) {
             orderRequest.setAddress(finalAddress + ":" + result.getLocation().longitude + "," + result.getLocation().latitude);
         }
 
@@ -143,13 +133,20 @@ public class CookActivity extends Activity implements OnGetGeoCoderResultListene
     }
 
     @Override
-    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+    public void onGetGeoCodeResult(GeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(this, "抱歉，未能找到结果", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(this, getString(R.string.can_not_parse_out_latlog), Toast.LENGTH_SHORT).show();
             return;
         }
+        post(result);
+    }
 
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(this, getString(R.string.can_not_parse_out_address), Toast.LENGTH_LONG).show();
+            return;
+        }
         Toast.makeText(this, result.getAddress(), Toast.LENGTH_LONG).show();
     }
 
