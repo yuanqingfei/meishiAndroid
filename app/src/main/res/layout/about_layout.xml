@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="341dp"
+        android:layout_height="wrap_content"
+        android:text="我们是一家新公司，致力于O2O饮食事业。 欢迎有兴趣的朋友和我们进行合作。"
+        android:id="@+id/aboutView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.68" />
+</LinearLayout>

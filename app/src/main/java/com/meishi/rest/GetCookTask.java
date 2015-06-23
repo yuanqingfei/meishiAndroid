@@ -17,7 +17,7 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.meishi.MeishiApplication;
 import com.meishi.R;
-import com.meishi.core.cook.CookActivity;
+import com.meishi.cook.CookActivity;
 import com.meishi.login.LoginActivity;
 import com.meishi.model.Cook;
 import com.meishi.support.Constants;

@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meishi.MeishiApplication;
-import com.meishi.core.order.OrderListAdapter;
+import com.meishi.mine.OrderListAdapter;
 import com.meishi.model.Customer;
 import com.meishi.model.Order;
 import com.meishi.support.Constants;

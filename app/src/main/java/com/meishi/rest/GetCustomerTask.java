@@ -6,9 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.EditText;
 
-import com.meishi.MeishiActivity;
 import com.meishi.MeishiApplication;
 import com.meishi.R;
+import com.meishi.meishi.MeishiActivity;
 import com.meishi.model.Customer;
 import com.meishi.support.Constants;
 

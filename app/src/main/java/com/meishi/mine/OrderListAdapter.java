@@ -1,4 +1,4 @@
-package com.meishi.core.order;
+package com.meishi.mine;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.meishi.core.map;
+package com.meishi.meishi;
 
 import android.app.Fragment;
 import android.graphics.Color;
@@ -35,7 +35,6 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.meishi.MeishiApplication;
 import com.meishi.R;
 import com.meishi.rest.GetCookTask;
 import com.meishi.support.Constants;
@@ -49,9 +48,9 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by Aaron on 2015/6/7.
  */
-public class MapFragment extends Fragment implements MKOfflineMapListener, OnGetGeoCoderResultListener {
+public class MeishiMapFragment extends Fragment implements MKOfflineMapListener, OnGetGeoCoderResultListener {
 
-    private static final String TAG = MapFragment.class.getSimpleName();
+    private static final String TAG = MeishiMapFragment.class.getSimpleName();
 
     private MapView mMapView;
 
@@ -175,14 +174,6 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
                 if (IS_FIRST) {
                     IS_FIRST = false;
                     showCooksAndAddress(baiduLoc);
-
-                    // get current City Name for future usage
-                    location.getCountry();
-                    String city = location.getCity();
-                    Log.d(TAG, city);
-                    ((MeishiApplication) getActivity().getApplication()).setCurrentCity(city);
-
-                    mLocationClient.getLocOption().setIsNeedAddress(false);
                 }
 
             }
@@ -190,7 +181,6 @@ public class MapFragment extends Fragment implements MKOfflineMapListener, OnGet
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
-        option.setIsNeedAddress(true); // so that we can get city at init.
         option.setScanSpan(5000);
         option.setProdName("meishi");
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);

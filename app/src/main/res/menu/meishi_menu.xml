@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-<!--
-    <item android:id="@+id/actionSearch"
-        android:title="搜索"
-        />
--->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/login"
-        android:title="登录/注册"
-        android:showAsAction="ifRoom"
-        />
+        android:id="@+id/meishi_map"
+        android:showAsAction="always"
+        android:title="美食地图" />
 
     <item
-        android:id="@+id/logout"
-        android:title="登出"
-        android:showAsAction="ifRoom"
-        ></item>
+        android:id="@+id/meishi_list"
+        android:showAsAction="always"
+        android:title="美食列表" />
 
 
 </menu>

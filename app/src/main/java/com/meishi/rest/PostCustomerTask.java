@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.meishi.MeishiActivity;
 import com.meishi.MeishiApplication;
+import com.meishi.meishi.MeishiActivity;
 import com.meishi.model.Customer;
 import com.meishi.register.RegisterActivity;
 import com.meishi.support.Constants;

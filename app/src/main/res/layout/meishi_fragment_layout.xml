@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcomeImage"
+        android:layout_weight="0.59" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.10" />
+
+    <TextView
+        android:layout_width="199dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="当前城市"
+        android:id="@+id/currentCity"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.04" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.10" />
+
+    <Button
+        android:layout_width="174dp"
+        android:layout_height="wrap_content"
+        android:text="搜索美食"
+        android:id="@+id/searchButton"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.meishi.MeishiActivity;
 import com.meishi.MeishiApplication;
+import com.meishi.meishi.MeishiActivity;
 import com.meishi.model.Customer;
 import com.meishi.model.OrderRequest;
 import com.meishi.support.Constants;

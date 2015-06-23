@@ -13,7 +13,7 @@
         android:layout_weight="1" />
 
     <RadioGroup
-        android:id="@+id/rg_tab"
+        android:id="@+id/rg_meishi_tab"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,17 +22,17 @@
         android:background="@drawable/bg_weibo_listab">
 
         <RadioButton
-            android:id="@+id/rb_meishi"
+            android:id="@+id/rb_meishi_map"
             style="@style/weibo_tab"
-            android:drawableTop="@drawable/weibolist_attention_selector"
-            android:text="美食" />
+            android:drawableTop="@drawable/weibolist_atme_selector"
+            android:text="美食地图" />
 
 
         <RadioButton
-            android:id="@+id/rb_my"
+            android:id="@+id/rb_meishi_list"
             style="@style/weibo_tab"
-            android:drawableTop="@drawable/weibolist_mylist_selector"
-            android:text="我的" />
+            android:drawableTop="@drawable/weibolist_atme_selector"
+            android:text="美食列表" />
 
     </RadioGroup>
 </LinearLayout>
