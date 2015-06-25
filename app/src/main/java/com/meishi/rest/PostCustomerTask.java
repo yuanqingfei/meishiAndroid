@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meishi.MeishiApplication;
-import com.meishi.meishi.MeishiActivity;
+import com.meishi.main.MainActivity;
 import com.meishi.model.Customer;
 import com.meishi.register.RegisterActivity;
 import com.meishi.support.Constants;
@@ -83,8 +83,8 @@ public class PostCustomerTask extends AsyncTask<Customer, Void, HttpStatus> {
                         ((MeishiApplication) registerActivity.getApplication()).setCustomerId(identity);
                         ((MeishiApplication) registerActivity.getApplication()).setCustomer(customer);
 
-                        Intent intent = new Intent(registerActivity, MeishiActivity.class);
-                        intent.putExtra(Constants.POSITION_BUNDILE_ID, 0);
+                        Intent intent = new Intent(registerActivity, MainActivity.class);
+                        intent.putExtra(Constants.POSITION_BUNDILE_ID, 1);
                         registerActivity.startActivity(intent);
                     }
                 });

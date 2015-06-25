@@ -35,15 +35,12 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.meishi.MeishiApplication;
 import com.meishi.R;
 import com.meishi.rest.GetCookTask;
 import com.meishi.support.Constants;
 
 import org.springframework.data.geo.Point;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Aaron on 2015/6/7.
@@ -64,11 +61,17 @@ public class MeishiMapFragment extends Fragment implements MKOfflineMapListener,
 
     private Boolean needLocate = true;
 
-    private static Boolean IS_FIRST = true;
+    private Boolean isFirst = true;
+
+    public MeishiMapFragment() {
+        setArguments(new Bundle());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "Map onCreate()");
 
         // make use of baidu offline map first.
         mOffline = new MKOfflineMap();
@@ -102,6 +105,55 @@ public class MeishiMapFragment extends Fragment implements MKOfflineMapListener,
                 showCooksAndAddress(mapStatus.target);
             }
         });
+
+
+        mLocationClient.registerLocationListener(new BDLocationListener() {
+
+            @Override
+            public void onReceiveLocation(BDLocation location) {
+                if (location == null || mMapView == null) {
+                    return;
+                }
+
+                LatLng baiduLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                MyLocationData locData = new MyLocationData.Builder()
+//                        .accuracy(location.getRadius()).direction(100)
+                        .latitude(location.getLatitude()).longitude(location.getLongitude()).build();
+                mBaiduMap.setMyLocationData(locData);
+
+                if(needLocate){
+                    needLocate = false;
+                    MapStatus newStatus = new MapStatus.Builder().target(baiduLoc).zoom(14).build();
+                    mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(newStatus));
+                    showCooksAndAddress(baiduLoc);
+                    mLocationClient.stop();
+                }
+
+            }
+        });
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);
+        option.setCoorType("bd09ll");
+        option.setScanSpan(5000);
+        option.setProdName("meishi");
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        mLocationClient.setLocOption(option);
+
+        LatLng previousLoc = ((MeishiApplication) getActivity().getApplication()).getCurrentLoc();
+        if(previousLoc != null){
+            LatLng baiduLoc = new LatLng(previousLoc.latitude, previousLoc.longitude);
+            MyLocationData locData = new MyLocationData.Builder()
+//                        .accuracy(location.getRadius()).direction(100)
+                    .latitude(previousLoc.latitude).longitude(previousLoc.longitude).build();
+            mBaiduMap.setMyLocationData(locData);
+
+            MapStatus newStatus = new MapStatus.Builder().target(previousLoc).zoom(14).build();
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(newStatus));
+            showCooksAndAddress(previousLoc);
+            mLocationClient.stop();
+        } else {
+            mLocationClient.start();
+        }
     }
 
     /**
@@ -119,10 +171,12 @@ public class MeishiMapFragment extends Fragment implements MKOfflineMapListener,
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.d(TAG, "Map onCreateView()");
+
         ImageButton locateButton = new ImageButton(getActivity());
         locateButton.setImageDrawable(getResources().getDrawable(R.drawable.locate));
         locateButton.setOnClickListener(new View.OnClickListener() {
@@ -144,48 +198,6 @@ public class MeishiMapFragment extends Fragment implements MKOfflineMapListener,
         layout.addView(locateButton, buttonParams);
 
         return layout;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mLocationClient.registerLocationListener(new BDLocationListener() {
-
-            @Override
-            public void onReceiveLocation(BDLocation location) {
-                if (location == null || mMapView == null) {
-                    return;
-                }
-
-                LatLng baiduLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                MyLocationData locData = new MyLocationData.Builder()
-//                        .accuracy(location.getRadius()).direction(100)
-                        .latitude(location.getLatitude()).longitude(location.getLongitude()).build();
-                mBaiduMap.setMyLocationData(locData);
-
-                if (needLocate) {
-                    needLocate = false;
-                    MapStatus newStatus = new MapStatus.Builder().target(baiduLoc).zoom(14).build();
-                    mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(newStatus));
-                }
-
-                // just for the first time show circle and cooks.
-                if (IS_FIRST) {
-                    IS_FIRST = false;
-                    showCooksAndAddress(baiduLoc);
-                }
-
-            }
-        });
-        LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true);
-        option.setCoorType("bd09ll");
-        option.setScanSpan(5000);
-        option.setProdName("meishi");
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        mLocationClient.setLocOption(option);
-        mLocationClient.start();
     }
 
     @Override
@@ -220,16 +232,10 @@ public class MeishiMapFragment extends Fragment implements MKOfflineMapListener,
         mBaiduMap.addOverlay(dotOO);
         mBaiduMap.addOverlay(circleOO);
 
-        GetCookTask getCookTask = new GetCookTask(getActivity(), mBaiduMap);
-        try {
-            getCookTask.execute(new Point[]{new Point(baiduLoc.latitude, baiduLoc.longitude)}).get(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } catch (ExecutionException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } catch (TimeoutException e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
+        new GetCookTask(getActivity(), mBaiduMap).execute(new Point[]{new Point(baiduLoc.latitude, baiduLoc.longitude)});
+
+        // for list fragment
+        ((MeishiApplication) getActivity().getApplication()).setCurrentLoc(baiduLoc);
     }
 
 

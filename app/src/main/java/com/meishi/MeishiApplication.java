@@ -3,6 +3,7 @@ package com.meishi;
 import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.model.LatLng;
 import com.meishi.model.Customer;
 
 /**
@@ -16,10 +17,20 @@ public class MeishiApplication extends Application {
 
     private String currentCity;
 
+    private LatLng currentLoc;
+
     @Override
     public void onCreate() {
         super.onCreate();
         SDKInitializer.initialize(this);
+    }
+
+    public LatLng getCurrentLoc() {
+        return currentLoc;
+    }
+
+    public void setCurrentLoc(LatLng currentLoc) {
+        this.currentLoc = currentLoc;
     }
 
     public String getCurrentCity() {

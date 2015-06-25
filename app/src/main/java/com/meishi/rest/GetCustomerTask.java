@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import com.meishi.MeishiApplication;
 import com.meishi.R;
-import com.meishi.meishi.MeishiActivity;
+import com.meishi.main.MainActivity;
 import com.meishi.model.Customer;
 import com.meishi.support.Constants;
 
@@ -114,8 +114,8 @@ public class GetCustomerTask extends AsyncTask<Void, Void, List<Customer>> {
             ((MeishiApplication) activity.getApplication()).setCustomerId(identity);
             ((MeishiApplication) activity.getApplication()).setCustomer(customers.get(0));
 
-            Intent intent = new Intent(activity, MeishiActivity.class);
-            intent.putExtra(Constants.POSITION_BUNDILE_ID, 0);
+            Intent intent = new Intent(activity, MainActivity.class);
+            intent.putExtra(Constants.POSITION_BUNDILE_ID, 1);
             activity.startActivity(intent);
         }
     }

@@ -1,6 +1,5 @@
 package com.meishi.register;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -36,12 +35,12 @@ public class RegisterActivity extends Activity implements OnGetGeoCoderResultLis
 
     private PostCustomerTask postTask;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        ActionBar actionBar = this.getActionBar();
+//        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+//    }
 
 
     @Override

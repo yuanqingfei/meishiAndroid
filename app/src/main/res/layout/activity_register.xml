@@ -16,6 +16,7 @@
         android:layout_alignParentEnd="true"
         android:inputType="textEmailAddress"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:hint="输入手机号或电子邮箱" />
 
     <EditText
@@ -48,7 +49,9 @@
         android:id="@+id/nameValue"
         android:layout_below="@+id/passwordValue2"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:hint="请填写身份证中的姓名" />
 
     <EditText
@@ -59,7 +62,9 @@
         android:id="@+id/passwordValue2"
         android:layout_below="@+id/passwordValue"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignEnd="@+id/passwordValue"
+        android:layout_alignRight="@+id/passwordValue"
         android:hint="确认密码" />
 
     <RadioButton
@@ -68,6 +73,7 @@
         android:text="男"
         android:id="@+id/maleButton"
         android:layout_toStartOf="@+id/submit"
+        android:layout_toLeftOf="@+id/submit"
         android:layout_below="@+id/nameValue" />
 
     <RadioButton
@@ -76,7 +82,8 @@
         android:text="女"
         android:id="@+id/femaleButton"
         android:layout_below="@+id/nameValue"
-        android:layout_alignEnd="@+id/submit" />
+        android:layout_alignEnd="@+id/submit"
+        android:layout_alignRight="@+id/submit"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -94,7 +101,9 @@
         android:id="@+id/addressValue"
         android:layout_below="@+id/maleButton"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignEnd="@+id/nameValue"
+        android:layout_alignRight="@+id/nameValue"
         android:hint="住址" />
 
 </RelativeLayout>

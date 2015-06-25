@@ -3,6 +3,7 @@ package com.meishi.main;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class MineFragment extends Fragment {
         Customer customer = ((MeishiApplication)getActivity().getApplication()).getCustomer();
         if(customer == null || customer.getIdentity() == null){
             Button registerButton = new Button(getActivity());
-            registerButton.setText("register/login");
+            registerButton.setText("注册/登录");
             registerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,10 +78,12 @@ public class MineFragment extends Fragment {
                 }
             });
             selfLayout.addView(registerButton);
+            selfLayout.setGravity(Gravity.CENTER);
         } else {
             TextView textView = new TextView(getActivity());
             textView.setText("欢迎你, " + customer.getName());
             selfLayout.addView(textView);
+            selfLayout.setGravity(Gravity.CENTER);
         }
 
         return view;

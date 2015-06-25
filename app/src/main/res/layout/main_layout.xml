@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="center"
-        android:background="@drawable/bg_weibo_listab">
+
+        >
 
         <RadioButton
             android:id="@+id/rb_meishi"
@@ -36,3 +37,5 @@
 
     </RadioGroup>
 </LinearLayout>
+
+    <!--android:background="@drawable/bg_weibo_listab"-->

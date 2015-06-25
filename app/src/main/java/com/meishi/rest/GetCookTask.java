@@ -41,14 +41,16 @@ public class GetCookTask extends AsyncTask<Point, Void, List<Cook>> {
     private static final String TAG = GetCookTask.class.getSimpleName();
 
     private SimpleAsync async;
-    private BaiduMap baiduMap;
+
     private Activity activity;
 
+    private BaiduMap mBaiduMap;
 
-    public GetCookTask(Activity activity, BaiduMap baiduMap) {
-        this.activity = activity;
+
+    public GetCookTask(Activity activity, BaiduMap mBaiduMap) {
         this.async = new SimpleAsync(activity);
-        this.baiduMap = baiduMap;
+        this.activity = activity;
+        this.mBaiduMap = mBaiduMap;
     }
 
     @Override
@@ -90,22 +92,22 @@ public class GetCookTask extends AsyncTask<Point, Void, List<Cook>> {
     protected void onPostExecute(List<Cook> cooks) {
         for (final Cook cook : cooks) {
             double[] location = cook.getLocation();
-            LatLng baiduLoc = new LatLng(location[1], location[0]);
+            LatLng loc = new LatLng(location[1], location[0]);
             TextView info = new TextView(activity.getApplicationContext());
             info.setBackgroundResource(R.drawable.popup);
             info.setPadding(30, 20, 30, 50);
             info.setText(cook.getName());
             info.setTextColor(Color.RED);
             BitmapDescriptor bd = BitmapDescriptorFactory.fromView(info);
-            OverlayOptions markerOO = new MarkerOptions().position(baiduLoc).icon(bd).zIndex(5)
+            OverlayOptions markerOO = new MarkerOptions().position(loc).icon(bd).zIndex(5)
                     .draggable(false).title(cook.getName());
-            final Marker marker = (Marker) (baiduMap.addOverlay(markerOO));
+            final Marker marker = (Marker) (mBaiduMap.addOverlay(markerOO));
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.COOK_BUNDLE_ID, cook);
             marker.setExtraInfo(bundle);
         }
 
-        baiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
                 String customerId = ((MeishiApplication)activity.getApplication()).getCustomerId();

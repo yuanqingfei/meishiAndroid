@@ -15,6 +15,7 @@ public interface Constants {
     String FIND_COOK_URL = COOKS_URL + "/search/findByLocationNear?";
     String DISHES_URL = BASE_URL + "/entity/dishes";
     String CRATE_ORDER_URL = BASE_URL + "action/createOrder";
+    String FIND_DISH_URL = BASE_URL + "/entity/getDishByCenterAndDistance?";
 
     String SEARCH_SCOPE = "3"; //3km
 

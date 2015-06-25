@@ -24,7 +24,7 @@ import com.meishi.model.Cook;
 import com.meishi.model.Customer;
 import com.meishi.model.Dish;
 import com.meishi.model.OrderRequest;
-import com.meishi.rest.GetDishTask;
+import com.meishi.rest.GetCookDishTask;
 import com.meishi.rest.PostOrderTask;
 import com.meishi.support.Constants;
 
@@ -57,10 +57,10 @@ public class CookActivity extends Activity implements OnGetGeoCoderResultListene
         // prepare data
         Cook cook = (Cook) getIntent().getSerializableExtra(Constants.COOK_BUNDLE_ID);
         List<String> dishIds = cook.getDishIds();
-        GetDishTask getDishTask = new GetDishTask(this);
+        GetCookDishTask getDishTask = new GetCookDishTask(this);
         getDishTask.execute(dishIds.toArray(new String[dishIds.size()]));
         try {
-            dishes = getDishTask.get(10, TimeUnit.SECONDS);
+            dishes = getDishTask.get(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Log.e(TAG, e.getMessage(), e);
         } catch (ExecutionException e) {

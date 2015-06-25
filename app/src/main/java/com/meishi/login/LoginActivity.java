@@ -1,6 +1,5 @@
 package com.meishi.login;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,15 +27,14 @@ public class LoginActivity extends Activity {
     // UI references.
     private AutoCompleteTextView identityView;
     private EditText mPasswordView;
-    private View mLoginFormView;
     private View mRegisterView;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        ActionBar actionBar = this.getActionBar();
+//        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class LoginActivity extends Activity {
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
+        View mLoginFormView = findViewById(R.id.login_form);
         mRegisterView = findViewById(R.id.registerView);
         mRegisterView.setOnClickListener(new OnClickListener() {
             @Override

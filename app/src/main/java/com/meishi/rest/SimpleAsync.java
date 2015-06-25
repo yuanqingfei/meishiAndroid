@@ -4,20 +4,27 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meishi.model.Customer;
 import com.meishi.model.OrderRequest;
 import com.meishi.support.Constants;
 
+import org.springframework.data.geo.GeoModule;
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Aaron on 2015/6/12.
@@ -62,8 +69,19 @@ public class SimpleAsync implements AsyncInterface {
 
     public RestTemplate createRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        messageConverters.add(new ByteArrayHttpMessageConverter());
+        messageConverters.add(new ResourceHttpMessageConverter());
+        messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+
+        MappingJackson2HttpMessageConverter jsonMessageConverter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new GeoModule());
+        jsonMessageConverter.setObjectMapper(mapper);
+        messageConverters.add(jsonMessageConverter);
+
+        restTemplate.setMessageConverters(messageConverters);
         return restTemplate;
     }
 

@@ -2,10 +2,15 @@ package com.meishi.rest;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 
+import com.meishi.meishi.DishListAdapter;
 import com.meishi.model.Dish;
 import com.meishi.support.Constants;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,37 +20,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Aaron on 2015/6/17.
+ * Created by Aaron on 2015/6/24.
  */
-public class GetDishTask extends AsyncTask<String, Void, List<Dish>> {
+public class GetDishTask  extends AsyncTask<Point, Void, List<Dish>> {
+
+    private static final String TAG = "GetDishTask";
 
     private SimpleAsync async;
 
-    public GetDishTask(Activity activity){
+    private DishListAdapter adapter;
+
+    private Bundle bundle;
+
+    public GetDishTask(Activity activity, DishListAdapter adapter, Bundle bundle){
         this.async = new SimpleAsync(activity);
+        this.adapter = adapter;
+        this.bundle = bundle;
     }
 
     @Override
-    protected List<Dish> doInBackground(String... params) {
+    protected List<Dish> doInBackground(Point... params) {
         List<Dish> dishList = new ArrayList<>();
 
-        RestTemplate client = async.createRestTemplate();
-        HttpEntity<Object> request = async.createGetRequest();
-        for(String dishId : params){
-            ResponseEntity<Dish> result = client.exchange(Constants.DISHES_URL + "/" + dishId, HttpMethod.GET, request,
-                    Dish.class);
-            dishList.add(result.getBody());
+        try {
+            RestTemplate restTemplate = async.createRestTemplate();
+            HttpEntity<Object> requestEntity = async.createGetRequest();
+            ResponseEntity<List<Dish>> response = restTemplate.exchange(
+                    Constants.FIND_DISH_URL + "location=" + params[0].getX() + "," + params[0].getY()
+                            + "&distance=" + Constants.SEARCH_SCOPE + "km", HttpMethod.GET, requestEntity,
+                    new ParameterizedTypeReference<List<Dish>>() {});
+            Log.d(TAG, response.getBody().toString());
+
+            dishList.addAll(response.getBody());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         }
+
         return dishList;
     }
 
     @Override
-    protected void onPreExecute() {
-        async.showProgressDialog("请等待，正在获取后台数据...");
-    }
-
-    @Override
-    protected void onPostExecute(List<Dish> cooks) {
-        async.dismissProgressDialog();
+    protected void onPostExecute(List<Dish> dishes) {
+        adapter.clear();
+        adapter.addAll(dishes);
+        adapter.notifyDataSetChanged();
     }
 }

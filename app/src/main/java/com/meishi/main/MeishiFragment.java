@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,6 @@ public class MeishiFragment extends Fragment {
 
     private Button searchButton;
 
-    private String currentCityName;
-
     private TextView currentCity;
 
     private LocationClient mLocationClient;
@@ -43,11 +42,10 @@ public class MeishiFragment extends Fragment {
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
         option.setIsNeedAddress(true); // so that we can get city at init.
-        option.setScanSpan(5000);
+        option.setScanSpan(1000);
         option.setProdName("meishi");
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         mLocationClient.setLocOption(option);
-        mLocationClient.start();
         mLocationClient.registerLocationListener(new BDLocationListener() {
 
             @Override
@@ -56,17 +54,18 @@ public class MeishiFragment extends Fragment {
                     return;
                 }
 
-                //                location.getCountry();
                 String city = location.getCity();
                 if (city != null) {
                     Log.d(TAG, city);
                     ((MeishiApplication) getActivity().getApplication()).setCurrentCity(city);
-                    currentCityName = city;
                     mLocationClient.stop();
+                    currentCity.setText("当前城市： " + location.getCountry() + city);
+                    currentCity.setGravity(Gravity.CENTER);
+                    searchButton.setEnabled(true);
                 }
             }
         });
-
+        mLocationClient.start();
     }
 
     @Override
@@ -76,12 +75,9 @@ public class MeishiFragment extends Fragment {
         currentCity = (TextView) view.findViewById(R.id.currentCity);
         searchButton = (Button) view.findViewById(R.id.searchButton);
 
-        if(currentCityName != null){
-            currentCity.setText(currentCityName);
-        } else {
-            currentCity.setText("无法定位，网络貌似有问题");
-//            searchButton.setEnabled(false);
-        }
+        currentCity.setText("当前城市无法定位，请检查网络");
+        currentCity.setGravity(Gravity.CENTER);
+        searchButton.setEnabled(false);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override

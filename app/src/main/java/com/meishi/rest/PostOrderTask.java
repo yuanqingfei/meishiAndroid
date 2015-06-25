@@ -3,11 +3,9 @@ package com.meishi.rest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.meishi.MeishiApplication;
-import com.meishi.meishi.MeishiActivity;
 import com.meishi.model.Customer;
 import com.meishi.model.OrderRequest;
 import com.meishi.support.Constants;
@@ -62,9 +60,9 @@ public class PostOrderTask extends AsyncTask<OrderRequest, Void, HttpStatus> {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Intent intent = new Intent(activity, MeishiActivity.class);
-                        intent.putExtra(Constants.POSITION_BUNDILE_ID, 1);
-                        activity.startActivity(intent);
+//                        Intent intent = new Intent(activity, MeishiActivity.class);
+//                        intent.putExtra(Constants.POSITION_BUNDILE_ID, 1);
+//                        activity.startActivity(intent);
                     }
                 });
 

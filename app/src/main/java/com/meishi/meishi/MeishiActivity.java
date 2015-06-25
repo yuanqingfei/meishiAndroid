@@ -37,7 +37,7 @@ public class MeishiActivity extends Activity implements RadioGroup.OnCheckedChan
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         Fragment fragment = FragmentFactory.getFragmentForMeishi(checkedId);
-        transaction.replace(R.id.content, fragment);
+        transaction.replace(R.id.meishi_content, fragment);
         transaction.commit();
     }
 
